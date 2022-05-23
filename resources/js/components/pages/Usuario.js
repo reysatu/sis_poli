@@ -13,7 +13,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
-
+import UsuarioService from "../service/UsuarioService";
 const Usuario = () => {
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     let emptyProduct = {
@@ -27,6 +27,19 @@ const Usuario = () => {
         rating: 0,
         inventoryStatus: 'INSTOCK'
     };
+
+    let emptyUsuario = {
+        id: null,
+        name: '',
+        apellido: '',
+        usuarioCip: '',
+        email: '',
+        celular: '',
+    };
+    const [usuario, setUsuario] = useState(emptyUsuario);
+    const [usuarios, setUsuarios] = useState(null);
+    const [usuarioDialog, setUsuarioDialog] = useState(false);
+    const [selectedUsuarios, setSelectedUsuarios] = useState(null);
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
@@ -43,6 +56,15 @@ const Usuario = () => {
         const productService = new ProductService();
         productService.getProducts().then(data => setProducts(data));
     }, []);
+
+    useEffect(() => {
+        async function fetchDataUsuario() {
+            const res = await UsuarioService.list();
+            setUsuarios(res.data)
+            } 
+            fetchDataUsuario();  
+    }, []);
+    console.log(usuarios);
 
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -299,19 +321,15 @@ const Usuario = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                    <DataTable ref={dt} value={usuarios} selection={selectedUsuarios} onSelectionChange={(e) => setSelectedUsuarios(e.value)}
+                        dataKey="idperfil" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                        currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} usuarios"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
-                        <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                     
+                        <Column field="descripcion" header="Perfil" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
