@@ -22,6 +22,25 @@ Perfil.list = async () => {
     return res;
 };
 
+Perfil.getPerfil = async () => {
+    const urList = baseUrl + "/getPerfil";
+    const logueo=window.localStorage.getItem("logueo");
+    const user=JSON.parse(logueo);
+    const tokend=user.access_token;
+    const config = {
+        headers: { Authorization: `Bearer ${tokend}`}
+    };
+    const res = await axios
+        .get(urList,config)
+        .then((response) => {
+            return response.data;
+        })
+        .catch((error) => {
+            return error;
+        });
+    return res;
+};
+
 Perfil.create = async (data) => {
     const urlvalida = baseUrl+"/perfilC";
     const logueo=window.localStorage.getItem("logueo");

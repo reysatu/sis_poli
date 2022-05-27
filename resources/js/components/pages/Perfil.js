@@ -34,7 +34,7 @@ const Perfil = () => {
 
     const [products, setProducts] = useState(null);//borrar
     const [perfils, setPerfils] = useState(null);///lista de los perfiles
-    const [productDialog, setProductDialog] = useState(false);
+    
     const [perfilDialog, setPerfilDialog] = useState(false);//cabecera del modal
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deletePerfilDialog, setDeletePerfilDialog] = useState(false);
@@ -104,7 +104,7 @@ const Perfil = () => {
             let _perfils = [...perfils];
             let _perfil = { ...perfil };
             if (perfil.idperfil) {
-                console.log(perfil.idperfil,"update perfil");
+              
                 const index = findIndexById(perfil.idperfil);
                 _perfils[index] = _perfil;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil modificado', life: 3000 });
@@ -284,7 +284,7 @@ const Perfil = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '450px' }} header="Nuevo Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '450px' }} header="Detalles de Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="descripcion">Perfil</label>
                             <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
@@ -297,7 +297,7 @@ const Perfil = () => {
                     <Dialog visible={deletePerfilDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deletePerfilDialogFooter} onHide={hideDeletePerfilDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {perfil && <span>Estás seguro de que quieres eliminar <b>{perfil.descripcion}</b>?</span>}
+                            {perfil && <span>Estás seguro de que quieres eliminar el perfil<b>{perfil.descripcion}</b>?</span>}
                         </div>
                     </Dialog>
 

@@ -17,9 +17,9 @@ class PerfilController extends Controller
         return Perfil::create($request->all());
     }
 
-    public function show($id)
+    public function getPerfil()
     {
-        //
+        return response()->json(['status'=>'ok','data'=>Perfil::all(['idperfil', 'descripcion'])], 200);
     }
 
     public function edit($id)

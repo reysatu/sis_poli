@@ -32,6 +32,9 @@ import IconsDemo from '../components/IconsDemo';
 import Crud from '../pages/Crud';
 import Perfil from '../pages/Perfil';
 import Usuario from '../pages/Usuario';
+import Modulo from '../pages/Modulo';
+
+
 import EmptyPage from '../pages/EmptyPage';
 import TimelineDemo from '../pages/TimelineDemo';
 
@@ -363,6 +366,7 @@ const Home = () => {
                     <Route path="/crud" component={Crud} />
                     <Route path="/Perfil" component={Perfil} />
                     <Route path="/Usuario" component={Usuario} />
+                    <Route path="/Modulo" component={Modulo} />
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
                 </div>
