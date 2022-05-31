@@ -33,6 +33,13 @@ import Crud from '../pages/Crud';
 import Perfil from '../pages/Perfil';
 import Usuario from '../pages/Usuario';
 import Modulo from '../pages/Modulo';
+import Comisaria from "../pages/Comisaria";
+import Arma from "../pages/Arma";
+import Vehiculo from "../pages/Vehiculo";
+import Especie from '../pages/Especie';
+
+
+
 
 
 import EmptyPage from '../pages/EmptyPage';
@@ -50,6 +57,9 @@ import '../assets/demo/Demos.scss';
 import '../assets/layout/layout.scss';
 import '../App.scss';
 import loginServices from "../service/LoginService";
+
+
+
 const Home = () => {
     const [layoutMode, setLayoutMode] = useState('static');
     const [layoutColorMode, setLayoutColorMode] = useState('light')
@@ -365,7 +375,11 @@ const Home = () => {
                     <Route path="/timeline" component={TimelineDemo} />
                     <Route path="/crud" component={Crud} />
                     <Route path="/Perfil" component={Perfil} />
+                    <Route path="/Comisaria" component={Comisaria} />
+                    <Route path="/Vehiculo" component={Vehiculo} />
+                    <Route path="/Arma" component={Arma} />
                     <Route path="/Usuario" component={Usuario} />
+                    <Route path="/Especie" component={Especie} />
                     <Route path="/Modulo" component={Modulo} />
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />

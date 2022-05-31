@@ -16,6 +16,7 @@ import { ProductService } from '../service/ProductService';
 import PerfilService from "../service/PerfilService";
 
 const Perfil = () => {
+    console.log('Entrando a perfiles');
     let emptyProduct = {
         id: null,
         name: '',
@@ -177,11 +178,11 @@ const Perfil = () => {
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
       
-        let _perfil = { ...perfil};
+        let _perfils = { ...perfils};
         
-        _perfil[`${name}`] = val;
+        _perfils[`${name}`] = val;
        
-        setPerfil(_perfil);
+        setPerfil(_perfils);
 
        
     }

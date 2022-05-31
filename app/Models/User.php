@@ -29,7 +29,7 @@ class User extends Authenticatable
         'idperfil',
 
     ];
-
+ 
     /**
      * The attributes that should be hidden for serialization.
      *

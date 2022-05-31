@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputSwitch } from 'primereact/inputswitch';
 import classNames from 'classnames';
-import {Button} from "primereact/button";
+import {Button} from "primereact/button"; 
+
 
 export const AppConfig = (props) => {
 
