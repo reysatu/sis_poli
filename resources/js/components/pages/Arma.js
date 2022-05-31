@@ -61,7 +61,7 @@ const Arma = () => {
                 setArmas(res.data)
             } 
             fetchDataArma();  
-    }, []);
+    },[arma]);
     const crear = async (data) => {
        
         const res = await ArmaService.create(data);

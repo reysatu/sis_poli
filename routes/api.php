@@ -71,9 +71,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Especie
 
-    Route::get('/especie', [EspecieController::class, 'index']);
-    Route::post('/especieC', [EspecieController::class, 'store']);
-    Route::put('/especieU/{id}', [EspecieController::class, 'update']);
-    Route::delete('/especieD/{id}', [EspecieController::class, 'destroy']);
-    Route::get('/getEspecie', [EspecieController::class, 'getEspecie']);
 });
+
+Route::get('/especie', [EspecieController::class, 'index']);
+Route::post('/especieC', [EspecieController::class, 'store']);
+Route::put('/especieU/{id}', [EspecieController::class, 'update']);
+Route::delete('/especieD/{id}', [EspecieController::class, 'destroy']);
+Route::get('/getEspecie', [EspecieController::class, 'getEspecie']);

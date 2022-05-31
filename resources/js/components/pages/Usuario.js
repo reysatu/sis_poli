@@ -92,7 +92,7 @@ const Usuario = () => {
             setUsuarios(res.data)
             } 
             fetchDataUsuario();  
-    }, []);
+    }, [usuario]);
 
     useEffect(() => {
         async function fetchDataPerfil() {
@@ -100,7 +100,7 @@ const Usuario = () => {
             setListperfils(res.data)
             } 
             fetchDataPerfil();  
-    }, [usuario]);
+    }, [perfil]);
 
     const crear = async (data) => {
        
@@ -264,10 +264,10 @@ const Usuario = () => {
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
-        let _usuarios = { ...usuario };
-        _usuarios[`${name}`] = val;
+        let _usuario = { ...usuario};
+        _usuario[`${name}`] = val;
 
-        setUsuario(_usuarios);
+        setUsuario(_usuario);
     }
     const onInputSelect = (val,name) => {
         // console.log(val.idperfil);

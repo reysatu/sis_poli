@@ -29,10 +29,10 @@ const Especie = () => {
         inventoryStatus: 'INSTOCK'
     };
     let emptyEspecie = {
-        id_especie: null,
-        tipo_especie: '',
+        idespecie: null,
+        especie: '',
         situacion: '',
-        tipo_document: '',
+        documento: '',
        
     };
 
@@ -62,7 +62,7 @@ const Especie = () => {
                 setEspecies(res.data)
             } 
             fetchDataEspecie();  
-    }, []);
+    }, [especie]);
     const crear = async (data) => {
        
         const res = await EspecieService.create(data);
@@ -104,19 +104,19 @@ const Especie = () => {
     const saveEspecie = () => {
         setSubmitted(true);
         
-         if (especie.tipo_especie.trim()) {
+         if (especie.especie.trim()) {
             let _especies = [...especies];
             let _especie = { ...especie};
-            if (especie.id_especie) {
+            if (especie.idespecie) {
               
-                const index = findIndexById(especie.id_especie);
+                const index = findIndexById(especie.idespecie);
                 _especies[index] = _especie;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Especie modificado', life: 3000 });
                 console.log(especie.id,"Especie actual ");
-                update(especie.id_especie,_especie);
+                update(especie.idespecie,_especie);
             }
             else {
-                _especie.id_especie = "";
+                _especie.idespecie = "";
                 _especies.push(_especie);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
                 crear(_especie);
@@ -148,8 +148,8 @@ const Especie = () => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     }
     const deleteEspecie = () => {
-        eliminar(especie.id_especie);
-        let _especies = especies.filter(val => val.id_especie !== especie.id_especie);
+        eliminar(especie.idespecie);
+        let _especies = especies.filter(val => val.idespecie !== especie.idespecie);
         setEspecies(_especies);
         setDeleteEspecieDialog(false);
         setEspecie(emptyEspecie);
@@ -159,7 +159,7 @@ const Especie = () => {
     const findIndexById = (id) => {
         let index = -1;
         for (let i = 0; i < especies.length; i++) {
-            if (especies[i].id_especie === id) {
+            if (especies[i].idespecie === id) {
                 index = i;
                 break;
             }
@@ -211,19 +211,19 @@ const Especie = () => {
         )
     }
 
-    const codigoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">idperfil</span>
-                {rowData.idperfil}
-            </>
-        );
-    }
-    const tipo_especieBodyTemplate = (rowData) => {
+    // const codigoBodyTemplate = (rowData) => {
+    //     return (
+    //         <>
+    //             <span className="p-column-title">idperfil</span>
+    //             {rowData.idperfil}
+    //         </>
+    //     );
+    // }
+    const especieBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Tipo de Especie</span>
-                {rowData.tipo_especie}
+                {rowData.especie}
             </>
         );
     }
@@ -235,11 +235,11 @@ const Especie = () => {
             </>
         );
     }
-    const tipo_documentBodyTemplate = (rowData) => {
+    const documentBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Tipo documento</span>
-                {rowData.tipo_document}
+                {rowData.documento}
             </>
         );
     }
@@ -293,26 +293,26 @@ const Especie = () => {
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable ref={dt} value={especies} selection={selectedEspecies} onSelectionChange={(e) => setSelectedEspecies(e.value)}
-                        dataKey="id_especies" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                        dataKey="idespecie" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
-                        <Column field="tipo_especie" header="Especies" sortable body={tipo_especieBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="especie" header="Especies" sortable body={especieBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="tipo_document" header="Tipo_document" sortable body={tipo_documentBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="documento" header="Tipo documento" sortable body={documentBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
                     <Dialog visible={especieDialog} style={{ width: '450px' }} header="Editar de Especie" modal className="p-fluid" footer={especieDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="tipo_especie">Especies</label>
-                            <InputText id="tipo_especie" value={especie.tipo_especie} onChange={(e) => onInputChange(e, 'tipo_especie')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.tipo_especie })} />
-                            {submitted && !especie.tipo_especie && <small className="p-invalid">Especie es requerido.</small>}
+                            <label htmlFor="especie">Especies</label>
+                            <InputText id="especie" value={especie.especie} onChange={(e) => onInputChange(e, 'especie')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.especie })} />
+                            {submitted && !especie.especie && <small className="p-invalid">Especie es requerido.</small>}
                         </div>
 
                         <div className="field">
@@ -322,9 +322,9 @@ const Especie = () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="tipo_document">Tipo de documento</label>
-                            <InputText id="tipo_document" value={especie.tipo_document} onChange={(e) => onInputChange(e, 'tipo_document')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.tipo_document})} />
-                            {submitted && !especie.tipo_document && <small className="p-invalid">Especie es requerido.</small>}
+                            <label htmlFor="documento">Tipo de documento</label>
+                            <InputText id="documento" value={especie.documento} onChange={(e) => onInputChange(e, 'documento')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.documento})} />
+                            {submitted && !especie.documento && <small className="p-invalid">Especie es requerido.</small>}
                         </div>
                     </Dialog>
                     
@@ -332,7 +332,7 @@ const Especie = () => {
                     <Dialog visible={deleteEspecieDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteEspecieDialogFooter} onHide={hideDeleteEspecieDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {especie && <span>Estás seguro de que quieres eliminar el perfil<b>{especie.tipo_especie}</b>?</span>}
+                            {especie && <span>Estás seguro de que quieres eliminar el perfil<b>{especie.especie}</b>?</span>}
                         </div>
                     </Dialog>
 

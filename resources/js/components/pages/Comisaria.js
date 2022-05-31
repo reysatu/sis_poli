@@ -73,7 +73,7 @@ const Comisaria = () => {
                 setComisariass(res.data)
             } 
             fetchDataComisaria();  
-    }, []);
+    }, [comisarias]);
     // -----------------------------------
 
     useEffect(() => {

@@ -61,7 +61,7 @@ const Vehiculo = () => {
                 setVehiculos(res.data)
             } 
             fetchDataVehiculo();  
-    }, []);
+    }, [vehiculo]);
     const crear = async (data) => {
        
         const res = await VehiculoService.create(data);
@@ -106,8 +106,7 @@ const Vehiculo = () => {
          if (vehiculo.marca.trim()) {
             let _vehiculos = [...vehiculos];
             let _vehiculo = { ...vehiculo };
-            if (vehiculo.idvehiculo) {
-              
+            if (vehiculo.idvehiculo) { 
                 const index = findIndexById(vehiculo.idvehiculo);
                 _vehiculos[index] = _vehiculo;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo modificado', life: 3000 });

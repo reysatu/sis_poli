@@ -183,11 +183,11 @@ const Perfil = () => {
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
       
-        let _perfils = { ...perfils};
+        let _perfil = { ...perfil};
         
-        _perfils[`${name}`] = val;
+        _perfil[`${name}`] = val;
        
-        setPerfil(_perfils);
+        setPerfil(_perfil);
 
        
     }

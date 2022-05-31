@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>PrimeReact - Sakai</title>
+    <title>SISTEMA - PNP</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
