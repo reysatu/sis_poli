@@ -119,7 +119,7 @@ const Perfil = () => {
                 _perfil.idperfil = "";
                 _perfils.push(_perfil);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
-                crear(_perfil);
+                // crear(_perfil);
             }
             setPerfils(_perfils);
             setPerfilDialog(false);
@@ -128,7 +128,8 @@ const Perfil = () => {
     }
    
     const editPerfil = (perfil) => {
-       
+       console.log(perfil);
+       console.log("perfil");
         setPerfil({ ...perfil });
         setPerfilDialog(true);
       
@@ -183,11 +184,11 @@ const Perfil = () => {
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
       
-        let _perfils = { ...perfils};
+        let _perfil = { ...perfil};
         
-        _perfils[`${name}`] = val;
+        _perfil[`${name}`] = val;
        
-        setPerfil(_perfils);
+        setPerfil(_perfil);
 
        
     }
