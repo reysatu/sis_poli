@@ -100,7 +100,7 @@ const Usuario = () => {
             setListperfils(res.data)
             } 
             fetchDataPerfil();  
-    }, []);
+    }, [usuario]);
 
     const crear = async (data) => {
        
