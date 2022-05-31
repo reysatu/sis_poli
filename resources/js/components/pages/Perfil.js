@@ -58,7 +58,7 @@ const Perfil = () => {
                 setPerfils(res.data)
             } 
             fetchDataPerfil();  
-    }, []);
+    }, [perfil]);
     const crear = async (data) => {
        
         const res = await PerfilService.create(data);
@@ -103,15 +103,18 @@ const Perfil = () => {
          if (perfil.descripcion.trim()) {
             let _perfils = [...perfils];
             let _perfil = { ...perfil };
+            console.log("/////");
+            console.log(perfil)
+            console.log("//////")
             if (perfil.idperfil) {
-              
+                console.log("ingreso per");
                 const index = findIndexById(perfil.idperfil);
                 _perfils[index] = _perfil;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil modificado', life: 3000 });
-                console.log(perfil.id,"perfil actual ");
                 update(perfil.idperfil,_perfil);
             }
             else {
+                console.log("ingreso crear");
                 _perfil.idperfil = "";
                 _perfils.push(_perfil);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
@@ -124,8 +127,10 @@ const Perfil = () => {
     }
    
     const editPerfil = (perfil) => {
+       
         setPerfil({ ...perfil });
         setPerfilDialog(true);
+      
     }
 
 
