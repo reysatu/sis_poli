@@ -1,10 +1,10 @@
 import axios from "axios";
 const baseUrl = "http://127.0.0.1:8000/api";
-const Usuario = {};
+const Persona = {};
 
 
-Usuario.list = async () => {
-    const urList = baseUrl + "/usuario";
+Persona.list = async () => {
+    const urList = baseUrl + "/persona";
     const logueo=window.localStorage.getItem("logueo");
     const user=JSON.parse(logueo);
     const tokend=user.access_token;
@@ -22,8 +22,27 @@ Usuario.list = async () => {
     return res;
 };
 
-Usuario.create = async (data) => {
-    const urlvalida = baseUrl+"/usuarioC";
+Persona.getPersona = async () => {
+    const urList = baseUrl + "/getPersona";
+    const logueo=window.localStorage.getItem("logueo");
+    const user=JSON.parse(logueo);
+    const tokend=user.access_token;
+    const config = {
+        headers: { Authorization: `Bearer ${tokend}`}
+    };
+    const res = await axios
+        .get(urList,config)
+        .then((response) => {
+            return response.data;
+        })
+        .catch((error) => {
+            return error;
+        });
+    return res;
+};
+
+Persona.create = async (data) => {
+    const urlvalida = baseUrl+"/personaC";
     const logueo=window.localStorage.getItem("logueo");
     const user=JSON.parse(logueo);
     const tokend=user.access_token;
@@ -41,8 +60,8 @@ Usuario.create = async (data) => {
     return res;
 };
 
-Usuario.update = async (id,data) => {
-    const urlvalida = baseUrl+"/usuarioU/"+id;
+Persona.update = async (id,data) => {
+    const urlvalida = baseUrl+"/personaU/"+id;
     const logueo=window.localStorage.getItem("logueo");
     const user=JSON.parse(logueo);
     const tokend=user.access_token;
@@ -60,8 +79,8 @@ Usuario.update = async (id,data) => {
     return res;
 };
 
-Usuario.eliminar = async (id) => {
-    const urlvalida = baseUrl+"/usuarioD/"+id;
+Persona.eliminar = async (id) => {
+    const urlvalida = baseUrl+"/personaD/"+id;
     const logueo=window.localStorage.getItem("logueo");
     const user=JSON.parse(logueo);
     const tokend=user.access_token;
@@ -78,4 +97,4 @@ Usuario.eliminar = async (id) => {
         });
     return res;
 };
-export default Usuario;
+export default Persona;

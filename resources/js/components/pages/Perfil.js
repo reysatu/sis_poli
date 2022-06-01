@@ -53,6 +53,8 @@ const Perfil = () => {
         const productService = new ProductService();
         productService.getProducts().then(data => setProducts(data));
     }, []);
+
+    
     useEffect(() => {
         async function fetchDataPerfil() {
             const res = await PerfilService.list();

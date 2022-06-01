@@ -37,6 +37,7 @@ import Comisaria from "../pages/Comisaria";
 import Arma from "../pages/Arma";
 import Vehiculo from "../pages/Vehiculo";
 import Especie from '../pages/Especie';
+import Persona from '../pages/Persona';
 
 
 
@@ -381,6 +382,7 @@ const Home = () => {
                     <Route path="/Usuario" component={Usuario} />
                     <Route path="/Especie" component={Especie} />
                     <Route path="/Modulo" component={Modulo} />
+                    <Route path="/Persona" component={Persona} />
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
                 </div>
