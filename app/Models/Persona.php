@@ -20,6 +20,7 @@ class Persona extends Model
         'nombre',
         'ap_paterno',
         'ap_materno',
+        'edad',
         'nacimiento',
         'sexo',
         'celular',

@@ -238,6 +238,26 @@ const codeBodyTemplate = (rowData) => {
     );
 }
 
+
+
+const clase_vehiculoBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Marca</span>
+            {rowData.clase_vehiculo}
+        </>
+    );
+}
+
+
+const situacionBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Marca</span>
+            {rowData.situacion}
+        </>
+    );
+}
 const marcaBodyTemplate = (rowData) => {
     return (
         <>
@@ -321,6 +341,10 @@ const colorBodyTemplate = (rowData) => {
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
+                        <Column field="clase_vehiculo" header="Clase Vehiculo" sortable body={clase_vehiculoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
+                        <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="marca" header="Marca" sortable body={marcaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                        
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
@@ -331,6 +355,17 @@ const colorBodyTemplate = (rowData) => {
 
                     <Dialog visible={vehiculoDialog} style={{ width: '450px' }} header="Detalles de vehiculo" modal className="p-fluid" footer={vehiculoDialogFooter} onHide={hideDialog}>
                         
+                        <div className="field">
+                            <label htmlFor="clase_vehiculo">Clase Vehiculo</label>
+                            <InputText id="clase_vehiculo" value={vehiculo.clase_vehiculo} onChange={(e) => onInputChange(e, 'clase_vehiculo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase_vehiculo })} />
+                            {submitted && !vehiculo.clase_vehiculo && <small className="p-invalid">vehiculo es requerido.</small>}
+                        </div>
+                        
+                        <div className="field">
+                            <label htmlFor="situacion">Situación</label>
+                            <InputText id="situacion" value={vehiculo.situacion} onChange={(e) => onInputChange(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.situacion })} />
+                            {submitted && !vehiculo.situacion && <small className="p-invalid">vehiculo es requerido.</small>}
+                        </div>
                         <div className="field">
                             <label htmlFor="marca">Marca</label>
                             <InputText id="marca" value={vehiculo.marca} onChange={(e) => onInputChange(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.marca })} />

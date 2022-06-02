@@ -81,10 +81,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // persona
 
-  
+    Route::get('/persona', [PersonaController::class, 'index']);
+    Route::post('/personaC', [PersonaController::class, 'store']);
+    Route::put('/personaU/{id}', [PersonaController::class, 'update']);
+    Route::delete('/personaD/{id}', [PersonaController::class, 'destroy']);
+    Route::get('/getPersona', [PersonaController::class, 'getPersona']);
 });
-Route::get('/persona', [PersonaController::class, 'index']);
-Route::post('/personaC', [PersonaController::class, 'store']);
-Route::put('/personaU/{id}', [PersonaController::class, 'update']);
-Route::delete('/personaD/{id}', [PersonaController::class, 'destroy']);
-Route::get('/getPersona', [PersonaController::class, 'getPersona']);

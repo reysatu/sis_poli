@@ -117,21 +117,22 @@ export const AppConfig = (props) => {
 
     return (
         <div ref={config} className={configClassName} id={"layout-config"}>
-            <button className="layout-config-button p-link" id="layout-config-button" onClick={toggleConfigurator}>
+            <button className="layout-config-button p-link" id="layout-config-button" onClick={props.toggleConfigurator}>
                 <i className="pi pi-cog"></i>
             </button>
-            <Button className="p-button-danger layout-config-close p-button-rounded p-button-text" icon="pi pi-times" onClick={hideConfigurator}/>
+
+            <Button className="p-button-danger layout-config-close p-button-rounded p-button-text" icon="pi pi-times" onClick={props.hideConfigurator}/>
 
             <div className="layout-config-content">
                 <h5 className="mt-0">Component Scale</h5>
                 <div className="config-scale">
-                    <Button icon="pi pi-minus" onClick={decrementScale} className="p-button-text" disabled={scale === scales[0]} />
+                    <Button icon="pi pi-minus" onClick={props.decrementScale} className="p-button-text" disabled={scale === scales[0]} />
                     {
                         scales.map((item) => {
                             return <i className={classNames('pi pi-circle-on', {'scale-active': item === scale})} key={item}/>
                         })
                     }
-                    <Button icon="pi pi-plus" onClick={incrementScale} className="p-button-text" disabled={scale === scales[scales.length - 1]} />
+                    <Button icon="pi pi-plus" onClick={props.incrementScale} className="p-button-text" disabled={scale === scales[scales.length - 1]} />
                 </div>
 
                 <h5>Input Style</h5>
@@ -249,7 +250,7 @@ export const AppConfig = (props) => {
                         <button className="p-link" onClick={e => changeTheme(e, 'fluent-light', 'light')}>
                             <img src="assets/layout/images/themes/fluent-light.png" alt="Fluent Light"/>
                         </button>
-                    </div>
+                    </div> 
                 </div>
 
                 <h6>PrimeOne Design - 2022</h6>

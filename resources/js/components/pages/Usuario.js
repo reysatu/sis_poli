@@ -470,11 +470,17 @@ const Usuario = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
                         <Column field="name" header="Nombre" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="apellido" header="Apellido" sortable body={apellidoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="dni" header="Dni" sortable body={dniBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        
                         <Column field="usuarioCip" header="Usuario CIP" sortable body={usuarioCipBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="email" header="Correo" sortable body={emailBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="celular" header="Celular" sortable body={celularBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 

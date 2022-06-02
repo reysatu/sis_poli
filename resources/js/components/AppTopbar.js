@@ -67,8 +67,10 @@ export const AppTopbar = (props) => {
     return (
         <div className="layout-topbar">
             <Link to="/" className="layout-topbar-logo">
-                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/poli.png' : 'assets/layout/images/logo-white.svg'} alt="logo"/>
-                <h3>Sistema Policial</h3>
+                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/poli.png' : 'assets/layout/images/logo-white.svg'} alt="logo" />
+                <p>
+                SISTEMA POLICIAL
+                </p>
             </Link>
 
             <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick}>

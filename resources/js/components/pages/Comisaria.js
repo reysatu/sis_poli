@@ -17,7 +17,7 @@ import { ProductService } from '../service/ProductService';
 import ComisariaService from "../service/ComisariaService";
 
 const Comisaria = () => {
-    console.log("entrando a comisarias");
+    console.log("entrando a comisaria");
     let emptyProduct = {
         id: null,
         name: '',
@@ -44,7 +44,7 @@ const Comisaria = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [estado, setEstado] = useState(null);
     const [products, setProducts] = useState(null);//borrar
-    const [comisariass, setComisariass] = useState(null);///lista de los comisarias
+    const [comisarias, setComisariass] = useState(null);///lista de los comisaria
 
 
     
@@ -53,7 +53,7 @@ const Comisaria = () => {
     const [deleteComisariaDialog, setDeleteComisariaDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState(emptyProduct);
-    const [comisarias, setComisaria] = useState(emptyComisaria);//estado de los  campos del comisarias
+    const [comisaria, setComisaria] = useState(emptyComisaria);//estado de los  campos del comisaria
     const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [SelectedComisariass, setSelectedComisariass] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
@@ -73,7 +73,7 @@ const Comisaria = () => {
                 setComisariass(res.data)
             } 
             fetchDataComisaria();  
-    }, [comisarias]);
+    }, [comisaria]);
     // -----------------------------------
 
     useEffect(() => {
@@ -130,16 +130,16 @@ const Comisaria = () => {
     const saveComisaria = () => {
         setSubmitted(true);
         
-         if (comisarias.nom_comisaria.trim()) {
-            let _comisariass = [...comisariass];
-            let _comisarias = { ...comisarias };
-            if (comisarias.id) {
+         if (comisaria.nom_comisaria.trim()) {
+            let _comisariass = [...comisarias];
+            let _comisarias = { ...comisaria };
+            if (comisaria.id) {
               
-                const index = findIndexById(comisarias.id);
+                const index = findIndexById(comisaria.id);
                 _comisariass[index] = _comisarias;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Comisaria modificado', life: 3000 });
-                console.log(comisariass.id, "comisaria actual ");
-                update(comisarias.id,_comisarias);
+                console.log(comisarias.id, "comisaria actual ");
+                update(comisaria.id,_comisarias);
             }
             else {
                 _comisarias.id = "";
@@ -153,17 +153,17 @@ const Comisaria = () => {
         }
     }
    
-    const editComisaria = (comisarias) => {
+    const editComisaria = (comisaria) => {
         setEstado(true);
-        setComisaria({ ...comisarias });
+        setComisaria({ ...comisaria });
         setComisariaDialog(true);
     }
 
 
     
 
-    const confirmDeleteComisaria = (comisarias) => {
-        setComisaria(comisarias);
+    const confirmDeleteComisaria = (comisaria) => {
+        setComisaria(comisaria);
         setDeleteComisariaDialog(true);
 
     }
@@ -175,8 +175,8 @@ const Comisaria = () => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     }
     const deleteComisaria = () => {
-        eliminar(comisarias.id);
-        let _comisariass = comisariass.filter(val => val.id !== comisarias.id);
+        eliminar(comisaria.id);
+        let _comisariass = comisarias.filter(val => val.id !== comisaria.id);
         setComisariass(_comisariass);
         setDeleteComisariaDialog(false);
         setComisaria(emptyComisaria);
@@ -185,8 +185,8 @@ const Comisaria = () => {
 
     const findIndexById = (id) => {
         let index = -1;
-        for (let i = 0; i < comisariass.length; i++) {
-            if (comisariass[i].id === id) {
+        for (let i = 0; i < comisarias.length; i++) {
+            if (comisarias[i].id === id) {
                 index = i;
                 break;
             }
@@ -208,7 +208,7 @@ const Comisaria = () => {
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         
-        let _comisaria = { ...comisarias};
+        let _comisaria = { ...comisaria};
         
         _comisaria[`${name}`] = val;
        
@@ -216,7 +216,7 @@ const Comisaria = () => {
     }
 
     const onCheckboxChange = (e) => {
-        let _comisaria = [...comisarias];
+        let _comisaria = [...comisaria];
         if (e.checked)
                  _comisaria.push(e.comisaria);
         else
@@ -333,10 +333,10 @@ const Comisaria = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={comisariass} selection={SelectedComisariass} onSelectionChange={(e) => setSelectedComisariass(e.value)}
+                    <DataTable ref={dt} value={comisarias} selection={SelectedComisariass} onSelectionChange={(e) => setSelectedComisariass(e.value)}
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} comisariass"
+                        currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} comisarias"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
@@ -353,16 +353,16 @@ const Comisaria = () => {
                         
                         <div className="field">
                             <label htmlFor="nom_comisaria">Comisaria</label>
-                            <InputText id="nom_comisaria" value={comisarias.nom_comisaria} onChange={(e) => onInputChange(e, 'nom_comisaria')} required autoFocus className={classNames({ 'p-invalid': submitted && !comisarias.nom_comisaria })} />
-                            {submitted && !comisarias.nom_comisaria && <small className="p-invalid">Comisaria es requerido.</small>}
+                            <InputText id="nom_comisaria" value={comisaria.nom_comisaria} onChange={(e) => onInputChange(e, 'nom_comisaria')} required autoFocus className={classNames({ 'p-invalid': submitted && !comisaria.nom_comisaria })} />
+                            {submitted && !comisaria.nom_comisaria && <small className="p-invalid">Comisaria es requerido.</small>}
                         </div>
                         <label htmlFor="estado">Estado</label>
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
-                            <Checkbox inputId="comisarias" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf(estado) !== -1} onChange={onCheckboxChange} className={classNames({ 'p-invalid': submitted && !comisarias.estado })}/>
+                            <Checkbox inputId="comisaria" name="estado" value={comisaria.estado} checked={checkboxValue.indexOf(estado) !== -1} onChange={onCheckboxChange} className={classNames({ 'p-invalid': submitted && !comisaria.estado })}/>
                                 <label htmlFor="estado">ssdfsd</label>
                            </div>
-                            {submitted && !comisarias.estado && <small className="p-invalid">Estado es requerido.</small>}
+                            {submitted && !comisaria.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                         
                        
@@ -375,7 +375,7 @@ const Comisaria = () => {
                     <Dialog visible={deleteComisariaDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteComisariaDialogFooter} onHide={hideDeleteComisariaDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {comisarias && <span>Estás seguro de que quieres eliminar el comisarias<b>{comisarias.nom_comisaria}</b>?</span>}
+                            {comisaria && <span>Estás seguro de que quieres eliminar el comisaria<b>{comisaria.nom_comisaria}</b>?</span>}
                         </div>
                     </Dialog>
 

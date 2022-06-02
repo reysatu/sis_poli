@@ -25,6 +25,7 @@ class PersonaController extends Controller
         'nombre',
         'ap_paterno',
         'ap_materno',
+        'edad',
         'nacimiento',
         'sexo',
         'celular',
