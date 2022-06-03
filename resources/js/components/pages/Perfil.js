@@ -119,7 +119,7 @@ const Perfil = () => {
                 _perfil.idperfil = "";
                 _perfils.push(_perfil);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
-                // crear(_perfil);
+                crear(_perfil);
             }
             setPerfils(_perfils);
             setPerfilDialog(false);

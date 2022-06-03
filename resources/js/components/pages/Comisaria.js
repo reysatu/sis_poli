@@ -33,7 +33,7 @@ const Comisaria = () => {
         id: null,
         nom_comisaria: '',
         auditoria: '',
-        estado: '',
+        estado: 'I',
 
     };
 
@@ -82,7 +82,7 @@ const Comisaria = () => {
                 setComisariass(res.data)
             } 
             fetchDataEstado();  
-    }, []);
+    }, [comisarias]);
 
 
 
@@ -147,16 +147,25 @@ const Comisaria = () => {
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Comisaria Creado', life: 3000 });
                 crear(_comisarias);
             }
+            setCheckboxValue([]);
             setComisariass(_comisariass);
             setComisariaDialog(false);
             setComisaria(emptyComisaria);
+
         }
     }
    
     const editComisaria = (comisarias) => {
-        setEstado(true);
+ 
+       console.log(comisarias);
         setComisaria({ ...comisarias });
         setComisariaDialog(true);
+        let _comisaria = { ...comisarias};
+        var estate_comisaria=_comisaria["estado"];
+     
+        setCheckboxValue([estate_comisaria]);
+     
+        
     }
 
 
@@ -216,13 +225,26 @@ const Comisaria = () => {
     }
 
     const onCheckboxChange = (e) => {
+        setCheckboxValue([]);
         let selectedValue = [...checkboxValue];
         if (e.checked)
             selectedValue.push(e.value);
         else
             selectedValue.splice(selectedValue.indexOf(e.value), 1);
-
+       
         setCheckboxValue(selectedValue);
+        var state_comisaria='I';
+        console.log(selectedValue);
+        if (e.checked){
+            console.log("agagaggagaaga");
+            state_comisaria='A';
+        }
+       
+        
+        let _comisaria = { ...comisarias };
+        _comisaria["estado"] =state_comisaria ;
+        setComisaria(_comisaria);
+      
     };
 
     // const onCheckboxChange = (e) => {
@@ -370,7 +392,7 @@ const Comisaria = () => {
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
                             {/* <Checkbox inputId="comisarias" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf(estado) !== -1} onChange={onCheckboxChange} className={classNames({ 'p-invalid': submitted && !comisarias.estado })}/> */}
-                            <Checkbox inputId="checkOption1" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
                            </div>
                             {submitted && !comisarias.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
