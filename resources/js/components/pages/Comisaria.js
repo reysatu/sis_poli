@@ -216,13 +216,23 @@ const Comisaria = () => {
     }
 
     const onCheckboxChange = (e) => {
-        let _comisaria = [...comisarias];
+        let selectedValue = [...checkboxValue];
         if (e.checked)
-                 _comisaria.push(e.comisaria);
+            selectedValue.push(e.value);
         else
-                 _comisaria.splice(_comisaria.indexOf(estado), 1);
-            setComisaria(_comisaria);
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+
+        setCheckboxValue(selectedValue);
     };
+
+    // const onCheckboxChange = (e) => {
+    //     let _comisaria = [...comisarias];
+    //     if (e.checked)
+    //              _comisaria.push(e.comisaria);
+    //     else
+    //              _comisaria.splice(_comisaria.indexOf(estado), 1);
+    //         setComisaria(_comisaria);
+    // };
 
     // const handleOnChange = () => {
     //     setIsChecked(estado);
@@ -356,11 +366,11 @@ const Comisaria = () => {
                             <InputText id="nom_comisaria" value={comisarias.nom_comisaria} onChange={(e) => onInputChange(e, 'nom_comisaria')} required autoFocus className={classNames({ 'p-invalid': submitted && !comisarias.nom_comisaria })} />
                             {submitted && !comisarias.nom_comisaria && <small className="p-invalid">Comisaria es requerido.</small>}
                         </div>
-                        <label htmlFor="estado">Estado</label>
+                        <label htmlFor="estado">Activo</label>
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
-                            <Checkbox inputId="comisarias" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf(estado) !== -1} onChange={onCheckboxChange} className={classNames({ 'p-invalid': submitted && !comisarias.estado })}/>
-                                <label htmlFor="estado">ssdfsd</label>
+                            {/* <Checkbox inputId="comisarias" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf(estado) !== -1} onChange={onCheckboxChange} className={classNames({ 'p-invalid': submitted && !comisarias.estado })}/> */}
+                            <Checkbox inputId="checkOption1" name="estado" value={comisarias.estado} checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
                            </div>
                             {submitted && !comisarias.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
