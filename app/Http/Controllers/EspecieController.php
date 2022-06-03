@@ -19,7 +19,7 @@ class EspecieController extends Controller
     }
     public function getEspecie()
     {
-        return response()->json(['status'=>'ok','data'=>Especie::all(['id_especie', 'tipo_especie','situacion', 'tipo_document'])], 200);
+        return response()->json(['status'=>'ok','data'=>Especie::all(['idespecie', 'especie','situacion', 'documento'])], 200);
     }
 
     public function update(Request $request, $id)

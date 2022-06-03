@@ -9,6 +9,7 @@ use App\Http\Controllers\ArmaController;
 use App\Http\Controllers\EspecieController;
 use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PersonaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,4 +77,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/especieU/{id}', [EspecieController::class, 'update']);
     Route::delete('/especieD/{id}', [EspecieController::class, 'destroy']);
     Route::get('/getEspecie', [EspecieController::class, 'getEspecie']);
+
+
+    // persona
+
+    Route::get('/persona', [PersonaController::class, 'index']);
+    Route::post('/personaC', [PersonaController::class, 'store']);
+    Route::put('/personaU/{id}', [PersonaController::class, 'update']);
+    Route::delete('/personaD/{id}', [PersonaController::class, 'destroy']);
+    Route::get('/getPersona', [PersonaController::class, 'getPersona']);
 });

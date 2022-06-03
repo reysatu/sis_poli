@@ -92,7 +92,7 @@ const Usuario = () => {
             setUsuarios(res.data)
             } 
             fetchDataUsuario();  
-    }, []);
+    }, [usuario]);
 
     useEffect(() => {
         async function fetchDataPerfil() {
@@ -100,7 +100,7 @@ const Usuario = () => {
             setListperfils(res.data)
             } 
             fetchDataPerfil();  
-    }, [usuario]);
+    }, [perfil]);
 
     const crear = async (data) => {
        
@@ -264,10 +264,10 @@ const Usuario = () => {
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
-        let _usuarios = { ...usuario };
-        _usuarios[`${name}`] = val;
+        let _usuario = { ...usuario};
+        _usuario[`${name}`] = val;
 
-        setUsuario(_usuarios);
+        setUsuario(_usuario);
     }
     const onInputSelect = (val,name) => {
         // console.log(val.idperfil);
@@ -470,11 +470,17 @@ const Usuario = () => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
                         <Column field="name" header="Nombre" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="apellido" header="Apellido" sortable body={apellidoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="dni" header="Dni" sortable body={dniBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        
                         <Column field="usuarioCip" header="Usuario CIP" sortable body={usuarioCipBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="email" header="Correo" sortable body={emailBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column field="celular" header="Celular" sortable body={celularBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 

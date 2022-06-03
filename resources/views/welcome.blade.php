@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>PrimeReact - Sakai</title>
+    <title>SISTEMA - PNP</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- <link rel="icon" type="image/x-icon" href="{{asset('js/app.js')}}%PUBLIC_URL%/favicon.ico" /> -->
     <link id="theme-link" rel="stylesheet" href="{{asset('assets/themes/lara-light-indigo/theme.css')}}">
+    <link rel="shortcut icon" href="\assets\layout\images\poli.ico" type="image/x-icon">
     <script src="{{asset('js/app.js')}}" defer></script>
 </head>
 <style type="text/css">
