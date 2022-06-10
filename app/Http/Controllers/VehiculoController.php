@@ -21,7 +21,7 @@ class VehiculoController extends Controller
 
     public function getPerfil()
     {
-        return response()->json(['status'=>'ok','data'=>Vehiculo::all(['idvehiculo', 'marca','modelo', 'color'])], 200);
+        return response()->json(['status'=>'ok','data'=>Vehiculo::all(['idvehiculo','clase','situacion', 'marca','modelo', 'estado'])], 200);
     }
 
     public function update(Request $request, $id)

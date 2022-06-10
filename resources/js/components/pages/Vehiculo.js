@@ -10,12 +10,13 @@ import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
+import { Checkbox } from 'primereact/checkbox'; 
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 import VehiculoService from "../service/VehiculoService";
 
-const Vehiculo = () => {
+const Vehiculo = () => { 
     console.log('Entrando a vehiculos');
     let emptyProduct = {
         id: null,
@@ -30,10 +31,15 @@ const Vehiculo = () => {
     };
     let emptyVehiculo = {
         idvehiculo: null,
+        clase: '',
+        situacion: '',
         marca: '',
         modelo:'',
-        color: '',
+        estado: 'I',
     };
+
+
+    const [checkboxValue, setCheckboxValue] = useState([]);
 
     const [products, setProducts] = useState(null);//borrar
     const [vehiculos, setVehiculos] = useState(null);///lista de los perfiles
@@ -51,10 +57,13 @@ const Vehiculo = () => {
     const toast = useRef(null);
     const dt = useRef(null);
 
+ 
+
     useEffect(() => {
         const productService = new ProductService();
         productService.getProducts().then(data => setProducts(data));
     }, []);
+    
     useEffect(() => {
         async function fetchDataVehiculo() {
             const res = await VehiculoService.list();
@@ -103,10 +112,11 @@ const Vehiculo = () => {
     const saveVehiculo = () => {
         setSubmitted(true);
         
-         if (vehiculo.marca.trim()) {
+         if (vehiculo.clase.trim()) {
             let _vehiculos = [...vehiculos];
             let _vehiculo = { ...vehiculo };
             if (vehiculo.idvehiculo) { 
+                console.log("ingreso vehi");
                 const index = findIndexById(vehiculo.idvehiculo);
                 _vehiculos[index] = _vehiculo;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo modificado', life: 3000 });
@@ -189,6 +199,33 @@ const Vehiculo = () => {
     }
 
 
+     // Estadoo
+     const onCheckboxChange = (e) => {
+        setCheckboxValue([]);
+        let selectedValue = [...checkboxValue];
+        if (e.checked)
+            selectedValue.push(e.value);
+        else
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+       
+        setCheckboxValue(selectedValue);
+        var state_vehiculo='I';
+        console.log(selectedValue);
+        if (e.checked){
+            console.log("agagaggagaaga");
+            state_vehiculo='A';
+        }
+       
+        
+        let _vehiculo = { ...vehiculo};
+        _vehiculo["estado"] = state_vehiculo ;
+        setVehiculo(_vehiculo);
+      
+    };
+
+    // 
+
+
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
@@ -217,34 +254,18 @@ const Vehiculo = () => {
             </>
         );
     }
-    const descripcionBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">marca</span>
-                {rowData.marca}
-            </>
-        );
-    }
+
 
 
 // ----------------------------------------------------------------
 
-const codeBodyTemplate = (rowData) => {
+
+
+const claseBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">Code</span>
-            {rowData.code}
-        </>
-    );
-}
-
-
-
-const clase_vehiculoBodyTemplate = (rowData) => {
-    return (
-        <>
-            <span className="p-column-title">Marca</span>
-            {rowData.clase_vehiculo}
+            <span className="p-column-title">clase</span>
+            {rowData.clase}
         </>
     );
 }
@@ -253,7 +274,7 @@ const clase_vehiculoBodyTemplate = (rowData) => {
 const situacionBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">Marca</span>
+            <span className="p-column-title">Situación</span>
             {rowData.situacion}
         </>
     );
@@ -274,11 +295,20 @@ const modeloBodyTemplate = (rowData) => {
         </>
     );
 }
-const colorBodyTemplate = (rowData) => {
+const estadoBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">color</span>
-            {rowData.color}
+            <span className="p-column-title">estado</span>
+            {rowData.estado}
+        </>
+    );
+}
+
+const descripcionBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">clase</span>
+            {rowData.clase}
         </>
     );
 }
@@ -341,7 +371,7 @@ const colorBodyTemplate = (rowData) => {
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
-                        <Column field="clase_vehiculo" header="Clase Vehiculo" sortable body={clase_vehiculoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="clase" header="Clase Vehiculo" sortable body={claseBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
@@ -349,16 +379,17 @@ const colorBodyTemplate = (rowData) => {
                        
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="color" header="Color" sortable body={colorBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
                     <Dialog visible={vehiculoDialog} style={{ width: '450px' }} header="Detalles de vehiculo" modal className="p-fluid" footer={vehiculoDialogFooter} onHide={hideDialog}>
                         
                         <div className="field">
-                            <label htmlFor="clase_vehiculo">Clase Vehiculo</label>
-                            <InputText id="clase_vehiculo" value={vehiculo.clase_vehiculo} onChange={(e) => onInputChange(e, 'clase_vehiculo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase_vehiculo })} />
-                            {submitted && !vehiculo.clase_vehiculo && <small className="p-invalid">vehiculo es requerido.</small>}
+                            <label htmlFor="clase">Clase Vehiculo</label>
+                            <InputText id="clase" value={vehiculo.clase} onChange={(e) => onInputChange(e, 'clase')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase })} />
+                            {submitted && !vehiculo.clase && <small className="p-invalid">vehiculo es requerido.</small>}
                         </div>
                         
                         <div className="field">
@@ -375,13 +406,15 @@ const colorBodyTemplate = (rowData) => {
                         <div className="field">
                             <label htmlFor="modelo">Modelo</label>
                             <InputText id="modelo" value={vehiculo.modelo} onChange={(e) => onInputChange(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.modelo })} />
-                            {submitted && !vehiculo.modelo && <small className="p-invalid">Vehiculo es requerido.</small>}
+                            {submitted && !vehiculo.modelo && <small className="p-invalid">Modelo es requerido.</small>}
                         </div>
 
-                        <div className="field">
-                            <label htmlFor="color">color</label>
-                            <InputText id="color" value={vehiculo.color} onChange={(e) => onInputChange(e, 'color')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.color })} />
-                            {submitted && !vehiculo.color && <small className="p-invalid">Vehiculo es requerido.</small>}
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                           </div>
+                            {submitted && !vehiculo.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                     </Dialog>
 
@@ -390,7 +423,7 @@ const colorBodyTemplate = (rowData) => {
                     <Dialog visible={deleteVehiculoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteVehiculoDialogFooter} onHide={hideDeleteVehiculoDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {vehiculo && <span>Estás seguro de que quieres eliminar el vehiculo<b>{vehiculo.marca}</b>?</span>}
+                            {vehiculo && <span>Estás seguro de que quieres eliminar el vehiculo<b>{vehiculo.clase}</b>?</span>}
                         </div>
                     </Dialog>
 

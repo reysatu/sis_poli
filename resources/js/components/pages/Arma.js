@@ -11,6 +11,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
+import { Checkbox } from 'primereact/checkbox'; 
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 import ArmaService from "../service/ArmaService";
@@ -32,8 +33,11 @@ const Arma = () => {
         idarma: null,
         marca: '',
         modelo:'',
-        anio_fabricacion:'',
+        calibre:'',
+        estado: 'I',
     };
+
+    const [checkboxValue, setCheckboxValue] = useState([]);
 
     const [products, setProducts] = useState(null);//borrar
     const [armas, setArmas] = useState(null);///lista de los perfiles
@@ -185,10 +189,32 @@ const Arma = () => {
         _arma[`${name}`] = val;
        
         setArma(_arma);
-
-       
     }
+        // Estadoo
+        const onCheckboxChange = (e) => {
+            setCheckboxValue([]);
+            let selectedValue = [...checkboxValue];
+            if (e.checked)
+                selectedValue.push(e.value);
+            else
+                selectedValue.splice(selectedValue.indexOf(e.value), 1);
+           
+            setCheckboxValue(selectedValue);
+            var state_arma='I';
+            console.log(selectedValue);
+            if (e.checked){
+                console.log("agagaggagaaga");
+                state_arma='A';
+            }
+           
+            
+            let _arma = { ...arma };
+            _arma["estado"] = state_arma ;
+            setArma(_arma);
+          
+        };
 
+        // 
 
     const leftToolbarTemplate = () => {
         return (
@@ -255,14 +281,25 @@ const modeloBodyTemplate = (rowData) => {
         </>
     );
 }
-const anio_fabricacionBodyTemplate = (rowData) => {
+const calibreBodyTemplate = (rowData) => {
     return (
         <>
             <span className="p-column-title">Año de fabricación</span>
-            {rowData.anio_fabricacion}
+            {rowData.calibre}
         </>
     );
 }
+const estadoBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Estado</span>
+            {rowData.estado}
+        </>
+    );
+}
+
+
+
 
 // ----------------------------------------------------------------
 
@@ -326,7 +363,10 @@ const anio_fabricacionBodyTemplate = (rowData) => {
                        
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="anio_fabricacion" header="Año de Fabricación" sortable body={anio_fabricacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="calibre" header="Calibre" sortable body={calibreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
+                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -345,9 +385,17 @@ const anio_fabricacionBodyTemplate = (rowData) => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="anio_fabricacion">Año de fabricación</label>
-                            <InputText id="anio_fabricacion" value={arma.anio_fabricacion} onChange={(e) => onInputChange(e, 'anio_fabricacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.anio_fabricacion })} />
-                            {submitted && !arma.anio_fabricacion && <small className="p-invalid">Arma es requerido.</small>}
+                            <label htmlFor="calibre">Calibre</label>
+                            <InputText id="calibre" value={arma.calibre} onChange={(e) => onInputChange(e, 'calibre')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.calibre })} />
+                            {submitted && !arma.calibre && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                           </div>
+                            {submitted && !arma.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                     </Dialog>
 

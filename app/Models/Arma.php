@@ -18,5 +18,5 @@ class Arma extends Model
 
     // public $incrementing = false;
 
-    protected $fillable = ['idarma', 'marca', 'modelo', 'anio_fabricacion'];
+    protected $fillable = ['idarma', 'marca', 'modelo', 'calibre', 'estado'];
 }

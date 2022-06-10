@@ -19,5 +19,5 @@ class Comisaria extends Model
 
     // public $incrementing = false;
 
-    protected $fillable = ['id', 'nom_comisaria','auditoria','estado'];
+    protected $fillable = ['id', 'nom_comisaria','estado'];
 }

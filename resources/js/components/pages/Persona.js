@@ -458,7 +458,7 @@ const Persona = () => {
                     <Dialog visible={deletePersonaDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deletePersonaDialogFooter} onHide={hideDeletePersonaDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {persona && <span>Estás seguro de que quieres eliminar el usuario <b>{persona.name}</b>?</span>}
+                            {persona && <span>Estás seguro de que quieres eliminar el usuario <b>{persona.nombre}</b>?</span>}
                         </div>
                     </Dialog>
 
