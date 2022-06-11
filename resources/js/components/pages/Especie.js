@@ -11,6 +11,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
+import { Checkbox } from 'primereact/checkbox'; 
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 import EspecieService from "../service/EspecieService";
@@ -33,8 +34,11 @@ const Especie = () => {
         especie: '',
         situacion: '',
         documento: '',
+        estado: 'I',
        
     };
+
+    const [checkboxValue, setCheckboxValue] = useState([]);
 
     const [products, setProducts] = useState(null);//borrar
     const [especies, setEspecies] = useState(null);///lista de los perfiles
@@ -191,6 +195,32 @@ const Especie = () => {
     }
 
 
+     // Estadoo
+     const onCheckboxChange = (e) => {
+        setCheckboxValue([]);
+        let selectedValue = [...checkboxValue];
+        if (e.checked)
+            selectedValue.push(e.value);
+        else
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+       
+        setCheckboxValue(selectedValue);
+        var state_especie='I';
+        console.log(selectedValue);
+        if (e.checked){
+            console.log("agagaggagaaga");
+            state_especie='A';
+        }
+       
+        
+        let _especie = { ...especie };
+        _especie["estado"] = state_especie ;
+        setEspecie(_especie);
+      
+    };
+
+    // 
+
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
@@ -240,6 +270,14 @@ const Especie = () => {
             <>
                 <span className="p-column-title">Tipo documento</span>
                 {rowData.documento}
+            </>
+        );
+    }
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Estado</span>
+                {rowData.estado}
             </>
         );
     }
@@ -305,6 +343,9 @@ const Especie = () => {
                         <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="documento" header="Tipo documento" sortable body={documentBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
+                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -325,6 +366,14 @@ const Especie = () => {
                             <label htmlFor="documento">Tipo de documento</label>
                             <InputText id="documento" value={especie.documento} onChange={(e) => onInputChange(e, 'documento')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.documento})} />
                             {submitted && !especie.documento && <small className="p-invalid">Especie es requerido.</small>}
+                        </div>
+
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                           </div>
+                            {submitted && !especie.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                     </Dialog>
                     

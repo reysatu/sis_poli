@@ -22,7 +22,7 @@ class ArmaController extends Controller
 
     public function getArma()
     {
-        return response()->json(['status'=>'ok','data'=>Arma::all(['idarma', 'marca', 'modelo', 'anio_fabricacion'])], 200);
+        return response()->json(['status'=>'ok','data'=>Arma::all(['idarma', 'marca', 'modelo', 'calibre', 'estado'])], 200);
     }
 
 

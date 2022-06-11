@@ -11,21 +11,20 @@ class ComisariaController extends Controller
 
     public function index() 
     {
+       
         return response()->json(['status'=>'ok','data'=>Comisaria::all()], 200);
     }
 
     public function store(Request $request)
     {
+
         return Comisaria::create($request->all());
     }
 
     public function getComisaria()
     {
-        return response()->json(['status'=>'ok','data'=>Comisaria::all(['id', 'nom_comisaria', 'auditoria', 'estado'])], 200);
+        return response()->json(['status'=>'ok','data'=>Comisaria::all(['id', 'nom_comisaria',  'estado'])], 200);
     }
-
-   
-
 
     public function update(Request $request, $id)
     {
@@ -34,7 +33,6 @@ class ComisariaController extends Controller
         return $comisaria;
     }
 
- 
     public function destroy($id)
     {
       

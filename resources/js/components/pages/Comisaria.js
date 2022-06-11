@@ -32,7 +32,6 @@ const Comisaria = () => {
     let emptyComisaria = {
         id: null,
         nom_comisaria: '',
-        auditoria: '',
         estado: 'I',
 
     };
@@ -73,17 +72,10 @@ const Comisaria = () => {
                 setComisariass(res.data)
             } 
             fetchDataComisaria();  
-    }, []);
+    }, [comisarias]);
     // -----------------------------------
 
-    useEffect(() => {
-        async function fetchDataEstado() {
-            const res = await ComisariaService.list();
-                setComisariass(res.data)
-            } 
-            fetchDataEstado();  
-    }, [comisarias]);
-
+   
 
 
     const crear = async (data) => {

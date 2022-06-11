@@ -11,6 +11,7 @@ class EspecieController extends Controller
     public function index()
     {
         return response()->json(['status'=>'ok','data'=>Especie::all()], 200);
+        
     }
  
     public function store(Request $request)
@@ -19,7 +20,7 @@ class EspecieController extends Controller
     }
     public function getEspecie()
     {
-        return response()->json(['status'=>'ok','data'=>Especie::all(['idespecie', 'especie','situacion', 'documento'])], 200);
+        return response()->json(['status'=>'ok','data'=>Especie::all(['idespecie', 'especie','situacion', 'documento', 'estado'])], 200);
     }
 
     public function update(Request $request, $id)
