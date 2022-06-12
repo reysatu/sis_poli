@@ -29,20 +29,7 @@ class ComisariaController extends Controller
         }
         return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
-    public function ListPolistation() 
-    {
-        $data_comisaria=Comisaria::all(['id', 'nom_comisaria',  'estado']);
-        $apu = [];
-        foreach ($data_comisaria as $item) {
-            $apu[] = [
-                'id' => $item->id,
-                'nom_comisaria' => $item->nom_comisaria,
-                'estado' => $item->estado,
-            ];
-
-        }
-        return response()->json(['status'=>'ok','data'=>$apu], 200);
-    }
+    
 
     public function store(Request $request)
     {
