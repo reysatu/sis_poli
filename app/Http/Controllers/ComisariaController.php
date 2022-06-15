@@ -12,8 +12,24 @@ class ComisariaController extends Controller
     public function index() 
     {
        
-        return response()->json(['status'=>'ok','data'=>Comisaria::all()], 200);
+        $data_comisaria=Comisaria::all(['id', 'nom_comisaria',  'estado']);
+        $apu = [];
+        foreach ($data_comisaria as $item) {
+            $status_description='ACTIVO';
+            if($item->estado=='I'){
+                $status_description='INACTIVO';
+            }
+            $apu[] = [
+                'id' => $item->id,
+                'nom_comisaria' => $item->nom_comisaria,
+                'estado' => $item->estado,
+                'status_description'=> $status_description,
+            ];
+
+        }
+        return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
+    
 
     public function store(Request $request)
     {

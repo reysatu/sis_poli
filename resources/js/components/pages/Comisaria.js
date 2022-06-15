@@ -32,7 +32,7 @@ const Comisaria = () => {
     let emptyComisaria = {
         id: null,
         nom_comisaria: '',
-        estado: 'I',
+        estado: 'A',
 
     };
 
@@ -44,6 +44,7 @@ const Comisaria = () => {
     const [estado, setEstado] = useState(null);
     const [products, setProducts] = useState(null);//borrar
     const [comisariass, setComisariass] = useState(null);///lista de los comisarias
+    const [titleComisaria,setTitleComisaria]=useState('');
 
 
     
@@ -70,6 +71,7 @@ const Comisaria = () => {
         async function fetchDataComisaria() {
             const res = await ComisariaService.list();
                 setComisariass(res.data)
+                console.log(comisariass);
             } 
             fetchDataComisaria();  
     }, [comisarias]);
@@ -102,6 +104,9 @@ const Comisaria = () => {
         setEstado(false)
         setSubmitted(false);
         setComisariaDialog(true);
+        var estate_comisaria='A';
+        setCheckboxValue([estate_comisaria]);
+        setTitleComisaria('Nueva Comisaría');
     }
 
 
@@ -127,15 +132,15 @@ const Comisaria = () => {
             let _comisarias = { ...comisarias };
             if (comisarias.id) {
               
-                const index = findIndexById(comisarias.id);
-                _comisariass[index] = _comisarias;
+                // const index = findIndexById(comisarias.id);
+                // _comisariass[index] = _comisarias;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Comisaria modificado', life: 3000 });
-                console.log(comisariass.id, "comisaria actual ");
+             
                 update(comisarias.id,_comisarias);
             }
             else {
                 _comisarias.id = "";
-                _comisariass.push(_comisarias);
+                // _comisariass.push(_comisarias);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Comisaria Creado', life: 3000 });
                 crear(_comisarias);
             }
@@ -156,6 +161,7 @@ const Comisaria = () => {
         var estate_comisaria=_comisaria["estado"];
      
         setCheckboxValue([estate_comisaria]);
+        setTitleComisaria('Editar Comisaría')
      
         
     }
@@ -295,8 +301,8 @@ const Comisaria = () => {
     const estadoBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">id</span>
-                {rowData.estado}
+                <span className="p-column-title">status_description</span>
+                {rowData.status_description}
             </>
         );
     }
@@ -364,8 +370,8 @@ const Comisaria = () => {
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
-                        <Column field="nom_comisaria" header="Comisariaaa" sortable body={nom_comisariaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        <Column field="nom_comisaria" header="Comisaria" sortable body={nom_comisariaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
                        
                         <Column body={actionBodyTemplate}></Column>
@@ -373,7 +379,7 @@ const Comisaria = () => {
                            
                     </DataTable>
                     
-                    <Dialog visible={comisariaDialog} style={{ width: '450px' }} header="Nueva de Comisaria" modal className="p-fluid" footer={comisariaDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={comisariaDialog} style={{ width: '450px' }} header={titleComisaria} modal className="p-fluid" footer={comisariaDialogFooter} onHide={hideDialog}>
                         
                         <div className="field">
                             <label htmlFor="nom_comisaria">Comisaria</label>
