@@ -47,6 +47,8 @@ import Arma from "../pages/Arma";
 import Vehiculo from "../pages/Vehiculo";
 import Especie from '../pages/Especie';
 import Persona from '../pages/Persona';
+import Reporte from '../pages/Reporte';
+
 
 
 
@@ -510,6 +512,7 @@ const Home = () => {
                     <Route path="/Arma" component={Arma} />
                     <Route path="/Usuario" component={Usuario} />
                     <Route path="/Especie" component={Especie} />
+                    <Route path="/Reporte" component={Reporte} />
                     <Route path="/Modulo" component={Modulo} />
                     <Route path="/Persona" component={Persona} />
                     <Route path="/empty" component={EmptyPage} />
