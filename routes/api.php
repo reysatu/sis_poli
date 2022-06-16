@@ -32,7 +32,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/list_modulos/{id}', [AuthController::class, 'list_modulos']);
 
 
-
 Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/infouser',[AuthController::class,'infouser']);
     Route::get('/logout', [AuthController::class, 'logout']);
@@ -90,15 +89,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getPersona', [PersonaController::class, 'getPersona']);
 
     // Reporte
-
-    
-});
-
-
-    Route::get("/reporte-pdf", [PdfController::class, "indexPdf"]);
-
     Route::get('/reporte', [ReporteController::class, 'index']);
     Route::post('/reporteC', [ReporteController::class, 'store']);
     Route::put('/reporteU/{id}', [ReporteController::class, 'update']);
     Route::delete('/reporteD/{id}', [ReporteController::class, 'destroy']);
     Route::get('/getReporte', [ReporteController::class, 'getReporte']);
+
+
+
+
+      // Reportes Pdf
+      Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
+      Route::get("reporteComisaria-pdf", [PdfController::class, "indexComiPdf"]);
+});
+
+
+
+
+  

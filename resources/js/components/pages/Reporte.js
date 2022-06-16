@@ -14,11 +14,9 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 // Componente para el reporte
-
 import { axios, baseUrl } from '../service/PdfService'; 
 
 import ReporteService from "../service/ReporteService";
-import PdfService from "../service/PdfService";
 
 
 const Reporte = () => {
@@ -41,8 +39,13 @@ const Reporte = () => {
 
 
     // reportes
+    const getPdf = async () => {
+        const response =  await axios.get( `${baseUrl}/reporte-pdf` , {responseType: "blob"});
 
-    const post = async (data) => { await PdfService.create(data); }
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
    
 
 
@@ -231,7 +234,7 @@ const Reporte = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={post} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }
