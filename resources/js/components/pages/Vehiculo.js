@@ -130,6 +130,7 @@ const Vehiculo = () => {
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo Creado', life: 3000 });
                 crear(_vehiculo);
             }
+            setCheckboxValue([]);
             setVehiculos(_vehiculos);
             setVehiculoDialog(false);
             setVehiculo(emptyVehiculo);
