@@ -10,7 +10,23 @@ class EspecieController extends Controller
 
     public function index()
     {
-        return response()->json(['status'=>'ok','data'=>Especie::all()], 200);
+        $data_especie=Especie::all(['idespecie', 'especie','situacion', 'documento', 'estado']);
+        $apu = [];
+        foreach ($data_especie as $item) { 
+            $status_description='ACTIVO';
+            if($item->estado=='I'){
+                $status_description='INACTIVO';
+            }
+            $apu[] = [
+                'idespecie' => $item->idespecie,
+                'especie' => $item->especie,
+                'situacion' => $item->situacion,
+                'documento' => $item->documento,
+                'estado' => $item->estado,
+                'status_description'=> $status_description,
+            ];
+        }
+        return response()->json(['status'=>'ok','data'=>$apu], 200);
         
     }
  

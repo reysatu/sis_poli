@@ -11,13 +11,30 @@ class ArmaController extends Controller
    
     public function index() 
     {
-        return response()->json(['status'=>'ok','data'=>Arma::all()], 200);
+        $data_arma=Arma::all(['idarma', 'marca', 'modelo', 'calibre', 'estado']);
+        $apu = [];
+        foreach ($data_arma as $item) { 
+            $status_description='ACTIVO';
+            if($item->estado=='I'){
+                $status_description='INACTIVO';
+            }
+            $apu[] = [
+                'idarma' => $item->idarma,
+                'marca' => $item->marca,
+                'modelo' => $item->modelo,  
+                'calibre' => $item->calibre,
+                'estado' => $item->estado,
+                'status_description'=> $status_description,
+            ];
+
+        }
+        return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
 
     
     public function store(Request $request)
     {
-        return Arma::create($request->all());
+        return Arma::create($request->all()); 
     }
 
     public function getArma()

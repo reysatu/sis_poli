@@ -34,7 +34,7 @@ const Especie = () => {
         especie: '',
         situacion: '',
         documento: '',
-        estado: 'I',
+        estado: 'A',
        
     };
 
@@ -52,6 +52,7 @@ const Especie = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [selectedEspecies, setSelectedEspecies] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
+    const [titleEspecie, setTitleEspecie]=useState(''); // nuevo
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
@@ -90,6 +91,9 @@ const Especie = () => {
         setEspecie(emptyEspecie);
         setSubmitted(false);
         setEspecieDialog(true);
+        var estate_especie='A';
+        setCheckboxValue([estate_especie]);
+        setTitleEspecie('Nueva especie');
     }
 
     const hideDialog = () => {
@@ -113,15 +117,15 @@ const Especie = () => {
             let _especie = { ...especie};
             if (especie.idespecie) {
               
-                const index = findIndexById(especie.idespecie);
-                _especies[index] = _especie;
+                // const index = findIndexById(especie.idespecie);
+                // _especies[index] = _especie;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Especie modificado', life: 3000 });
                 console.log(especie.id,"Especie actual ");
                 update(especie.idespecie,_especie);
             }
             else {
                 _especie.idespecie = "";
-                _especies.push(_especie);
+                // _especies.push(_especie);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
                 crear(_especie);
             }
@@ -134,6 +138,12 @@ const Especie = () => {
     const editEspecie = (especie) => {
         setEspecie({ ...especie });
         setEspecieDialog(true);
+
+        let _especie = { ...especie};
+        var estate_especie=_especie["estado"];
+
+        setCheckboxValue([estate_especie]);
+        setTitleEspecie('Editar especie');
     }
 
 
@@ -241,14 +251,7 @@ const Especie = () => {
         )
     }
 
-    // const codigoBodyTemplate = (rowData) => {
-    //     return (
-    //         <>
-    //             <span className="p-column-title">idperfil</span>
-    //             {rowData.idperfil}
-    //         </>
-    //     );
-    // }
+  
     const especieBodyTemplate = (rowData) => {
         return (
             <>
@@ -276,8 +279,8 @@ const Especie = () => {
     const estadoBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Estado</span>
-                {rowData.estado}
+                <span className="p-column-title">status_description</span>
+                {rowData.status_description}
             </>
         );
     }
@@ -344,12 +347,12 @@ const Especie = () => {
 
                         <Column field="documento" header="Tipo documento" sortable body={documentBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={especieDialog} style={{ width: '450px' }} header="Editar de Especie" modal className="p-fluid" footer={especieDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={especieDialog} style={{ width: '450px' }} header={titleEspecie} modal className="p-fluid" footer={especieDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="especie">Especies</label>
                             <InputText id="especie" value={especie.especie} onChange={(e) => onInputChange(e, 'especie')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.especie })} />

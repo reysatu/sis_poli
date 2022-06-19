@@ -10,7 +10,26 @@ class VehiculoController extends Controller
    
     public function index()
     {
-        return response()->json(['status'=>'ok','data'=>Vehiculo::all()], 200);
+
+        $data_vehiculo=Vehiculo::all(['idvehiculo','clase','situacion', 'marca','modelo', 'estado']);
+        $apu = [];
+        foreach ($data_vehiculo as $item) { 
+            $status_description='ACTIVO';
+            if($item->estado=='I'){
+                $status_description='INACTIVO';
+            }
+            $apu[] = [
+                'idvehiculo' => $item->idvehiculo,
+                'clase' => $item->clase,
+                'situacion' => $item->situacion,
+                'marca' => $item->marca,
+                'modelo' => $item->modelo,
+                'estado' => $item->estado,
+                'status_description'=> $status_description,
+            ];
+
+        }
+        return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
 
     

@@ -10,13 +10,13 @@ import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
-import { Checkbox } from 'primereact/checkbox'; 
 import { Dialog } from 'primereact/dialog';
+import { Checkbox } from 'primereact/checkbox'; 
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 import VehiculoService from "../service/VehiculoService";
 
-const Vehiculo = () => { 
+const Vehiculo = () => {
     console.log('Entrando a vehiculos');
     let emptyProduct = {
         id: null,
@@ -35,9 +35,8 @@ const Vehiculo = () => {
         situacion: '',
         marca: '',
         modelo:'',
-        estado: 'I',
+        estado: 'A',
     };
-
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
@@ -52,18 +51,18 @@ const Vehiculo = () => {
     const [vehiculo, setVehiculo] = useState(emptyVehiculo);//estado de los  campos del perfil
     const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [selectedVehiculos, setSelectedVehiculos] = useState(null);// AUN NO SE
+
+    const [titleVehiculo, setTitleVehiculo]=useState(''); // nuevo
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
 
- 
-
     useEffect(() => {
         const productService = new ProductService();
         productService.getProducts().then(data => setProducts(data));
     }, []);
-    
+
     useEffect(() => {
         async function fetchDataVehiculo() {
             const res = await VehiculoService.list();
@@ -87,13 +86,15 @@ const Vehiculo = () => {
         const res = await VehiculoService.eliminar(id);
     
     }
-  
     
    
     const openNew = () => {
         setVehiculo(emptyVehiculo);
         setSubmitted(false);
         setVehiculoDialog(true);
+        var estate_vehiculo='A';
+        setCheckboxValue([estate_vehiculo]);
+        setTitleVehiculo('Nuevo Vehiculo');
     }
 
     const hideDialog = () => {
@@ -111,21 +112,21 @@ const Vehiculo = () => {
 
     const saveVehiculo = () => {
         setSubmitted(true);
-        
-         if (vehiculo.clase.trim()) {
+
+        if (vehiculo.clase.trim()) {
             let _vehiculos = [...vehiculos];
             let _vehiculo = { ...vehiculo };
             if (vehiculo.idvehiculo) { 
                 console.log("ingreso vehi");
-                const index = findIndexById(vehiculo.idvehiculo);
-                _vehiculos[index] = _vehiculo;
+                // const index = findIndexById(vehiculo.idvehiculo);
+                // _vehiculos[index] = _vehiculo;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo modificado', life: 3000 });
                 console.log(vehiculo.id,"vehiculo actual ");
                 update(vehiculo.idvehiculo,_vehiculo);
             }
             else {
-                _vehiculo.idvehiculo = "";
-                _vehiculos.push(_vehiculo);
+                 _vehiculo.idvehiculo = "";
+                // _vehiculos.push(_vehiculo);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo Creado', life: 3000 });
                 crear(_vehiculo);
             }
@@ -135,9 +136,15 @@ const Vehiculo = () => {
         }
     }
    
-    const editVehiculo = (vehiculo) => {
-        setVehiculo({ ...vehiculo });
+
+    const editVehiculo = (vehiculo) =>  {
+         setVehiculo({ ...vehiculo });
         setVehiculoDialog(true);
+        let _vehiculo = { ...vehiculo};
+        var estate_vehiculo=_vehiculo["estado"];
+
+        setCheckboxValue([estate_vehiculo]);
+        setTitleVehiculo('Editar Vehiculo')
     }
 
 
@@ -148,6 +155,8 @@ const Vehiculo = () => {
         setDeleteVehiculoDialog(true);
 
     }
+
+
     const deleteSelectedProducts = () => {
         let _vehiculos = products.filter(val => !selectedProducts.includes(val));
         setVehiculos(_vehiculos);
@@ -155,7 +164,8 @@ const Vehiculo = () => {
         setSelectedVehiculos(null);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     }
-    const deleteVehiculo = () => {
+
+ const deleteVehiculo = () => {
         eliminar(vehiculo.idvehiculo);
         let _vehiculos = vehiculos.filter(val => val.idvehiculo !== vehiculo.idvehiculo);
         setVehiculos(_vehiculos);
@@ -197,34 +207,31 @@ const Vehiculo = () => {
 
        
     }
+        // Estadoo
+        const onCheckboxChange = (e) => {
+            setCheckboxValue([]);
+            let selectedValue = [...checkboxValue];
+            if (e.checked)
+                selectedValue.push(e.value);
+            else
+                selectedValue.splice(selectedValue.indexOf(e.value), 1);
+           
+            setCheckboxValue(selectedValue);
+            var state_vehiculo='I';
+            console.log(selectedValue);
+            if (e.checked){
+                console.log("agagaggagaaga");
+                state_vehiculo='A';
+            }
+           
+            
+            let _vehiculo = { ...vehiculo};
+            _vehiculo["estado"] = state_vehiculo ;
+            setVehiculo(_vehiculo);
+          
+        };
 
-
-     // Estadoo
-     const onCheckboxChange = (e) => {
-        setCheckboxValue([]);
-        let selectedValue = [...checkboxValue];
-        if (e.checked)
-            selectedValue.push(e.value);
-        else
-            selectedValue.splice(selectedValue.indexOf(e.value), 1);
-       
-        setCheckboxValue(selectedValue);
-        var state_vehiculo='I';
-        console.log(selectedValue);
-        if (e.checked){
-            console.log("agagaggagaaga");
-            state_vehiculo='A';
-        }
-       
-        
-        let _vehiculo = { ...vehiculo};
-        _vehiculo["estado"] = state_vehiculo ;
-        setVehiculo(_vehiculo);
-      
-    };
-
-    // 
-
+        // 
 
     const leftToolbarTemplate = () => {
         return (
@@ -246,15 +253,6 @@ const Vehiculo = () => {
         )
     }
 
-    const codigoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">idvehiculo</span>
-                {rowData.idvehiculo}
-            </>
-        );
-    }
-
 
 
 // ----------------------------------------------------------------
@@ -270,7 +268,6 @@ const claseBodyTemplate = (rowData) => {
     );
 }
 
-
 const situacionBodyTemplate = (rowData) => {
     return (
         <>
@@ -279,6 +276,7 @@ const situacionBodyTemplate = (rowData) => {
         </>
     );
 }
+
 const marcaBodyTemplate = (rowData) => {
     return (
         <>
@@ -295,23 +293,17 @@ const modeloBodyTemplate = (rowData) => {
         </>
     );
 }
+
 const estadoBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">estado</span>
-            {rowData.estado}
+            <span className="p-column-title">status_description</span>
+            {rowData.status_description}
         </>
     );
 }
 
-const descripcionBodyTemplate = (rowData) => {
-    return (
-        <>
-            <span className="p-column-title">clase</span>
-            {rowData.clase}
-        </>
-    );
-}
+
 
 // ----------------------------------------------------------------
 
@@ -328,7 +320,7 @@ const descripcionBodyTemplate = (rowData) => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Administrar vehiculo</h5>
+            <h5 className="m-0">Administrar Vehiculo</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
@@ -343,6 +335,7 @@ const descripcionBodyTemplate = (rowData) => {
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveVehiculo} />
         </>
     );
+
     const deleteVehiculoDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteVehiculoDialog} />
@@ -364,45 +357,45 @@ const descripcionBodyTemplate = (rowData) => {
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable ref={dt} value={vehiculos} selection={selectedVehiculos} onSelectionChange={(e) => setSelectedVehiculos(e.value)}
-                        dataKey=" idvehiculo" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
+                        dataKey="idvehiculo" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} vehiculos"
+                        currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} armas"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
                         <Column field="clase" header="Clase Vehiculo" sortable body={claseBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
+                       
                         <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="marca" header="Marca" sortable body={marcaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                       
+
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
+                        <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={vehiculoDialog} style={{ width: '450px' }} header="Detalles de vehiculo" modal className="p-fluid" footer={vehiculoDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={vehiculoDialog} style={{ width: '450px' }} header={titleVehiculo} modal className="p-fluid" footer={vehiculoDialogFooter} onHide={hideDialog}>
                         
-                        <div className="field">
+                    <div className="field">
                             <label htmlFor="clase">Clase Vehiculo</label>
                             <InputText id="clase" value={vehiculo.clase} onChange={(e) => onInputChange(e, 'clase')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase })} />
                             {submitted && !vehiculo.clase && <small className="p-invalid">vehiculo es requerido.</small>}
                         </div>
-                        
+
                         <div className="field">
                             <label htmlFor="situacion">Situación</label>
                             <InputText id="situacion" value={vehiculo.situacion} onChange={(e) => onInputChange(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.situacion })} />
                             {submitted && !vehiculo.situacion && <small className="p-invalid">vehiculo es requerido.</small>}
                         </div>
+
                         <div className="field">
                             <label htmlFor="marca">Marca</label>
                             <InputText id="marca" value={vehiculo.marca} onChange={(e) => onInputChange(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.marca })} />
                             {submitted && !vehiculo.marca && <small className="p-invalid">vehiculo es requerido.</small>}
                         </div>
-
                         <div className="field">
                             <label htmlFor="modelo">Modelo</label>
                             <InputText id="modelo" value={vehiculo.modelo} onChange={(e) => onInputChange(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.modelo })} />
@@ -414,7 +407,7 @@ const descripcionBodyTemplate = (rowData) => {
                            
                             <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
                            </div>
-                            {submitted && !vehiculo.estado && <small className="p-invalid">Estado es requerido.</small>}
+                           {submitted && !vehiculo.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                     </Dialog>
 

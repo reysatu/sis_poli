@@ -34,7 +34,7 @@ const Arma = () => {
         marca: '',
         modelo:'',
         calibre:'',
-        estado: 'I',
+        estado: 'A',
     };
 
     const [checkboxValue, setCheckboxValue] = useState([]);
@@ -50,6 +50,8 @@ const Arma = () => {
     const [arma, setArma] = useState(emptyArma);//estado de los  campos del perfil
     const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [selectedArmas, setSelectedArmas] = useState(null);// AUN NO SE
+
+    const [titleArma,setTitleArma]=useState(''); // nuevo
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
@@ -89,6 +91,9 @@ const Arma = () => {
         setArma(emptyArma);
         setSubmitted(false);
         setArmaDialog(true);
+        var estate_arma='A';
+        setCheckboxValue([estate_arma]);
+        setTitleArma('Nueva Arma');
     }
 
     const hideDialog = () => {
@@ -112,15 +117,15 @@ const Arma = () => {
             let _arma = { ...arma };
             if (arma.idarma) {
               
-                const index = findIndexById(arma.idarma);
-                _armas[index] = _arma;
+                // const index = findIndexById(arma.idarma);
+                // _armas[index] = _arma;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma modificado', life: 3000 });
                 console.log(arma.id,"arma actual ");
                 update(arma.idarma,_arma);
             }
             else {
                 _arma.idarma = "";
-                _armas.push(_arma);
+                // _armas.push(_arma);
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma Creado', life: 3000 });
                 crear(_arma);
             }
@@ -131,8 +136,15 @@ const Arma = () => {
     }
    
     const editArma = (arma) => {
+
+        console.log(arma);
         setArma({ ...arma });
         setArmaDialog(true);
+        let _arma = { ...arma};
+        var estate_arma=_arma["estado"];
+
+        setCheckboxValue([estate_arma]);
+        setTitleArma('Editar Arma')
     }
 
 
@@ -284,7 +296,7 @@ const modeloBodyTemplate = (rowData) => {
 const calibreBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">Año de fabricación</span>
+            <span className="p-column-title">Calibre</span>
             {rowData.calibre}
         </>
     );
@@ -292,8 +304,8 @@ const calibreBodyTemplate = (rowData) => {
 const estadoBodyTemplate = (rowData) => {
     return (
         <>
-            <span className="p-column-title">Estado</span>
-            {rowData.estado}
+            <span className="p-column-title">status_description</span>
+            {rowData.status_description}
         </>
     );
 }
@@ -365,12 +377,12 @@ const estadoBodyTemplate = (rowData) => {
 
                         <Column field="calibre" header="Calibre" sortable body={calibreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="estado" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={armaDialog} style={{ width: '450px' }} header="Detalles de Arma" modal className="p-fluid" footer={armaDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={armaDialog} style={{ width: '450px' }} header={titleArma} modal className="p-fluid" footer={armaDialogFooter} onHide={hideDialog}>
                         
                         <div className="field">
                             <label htmlFor="marca">Marca</label>

@@ -14,7 +14,7 @@ class ComisariaController extends Controller
        
         $data_comisaria=Comisaria::all(['id', 'nom_comisaria',  'estado']);
         $apu = [];
-        foreach ($data_comisaria as $item) {
+        foreach ($data_comisaria as $item) { 
             $status_description='ACTIVO';
             if($item->estado=='I'){
                 $status_description='INACTIVO';
