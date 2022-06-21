@@ -98,6 +98,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/reporteU/{id}', [ReporteController::class, 'update']);
     Route::delete('/reporteD/{id}', [ReporteController::class, 'destroy']);
     Route::get('/getReporte', [ReporteController::class, 'getReporte']);
+
+        // Module
+        Route::get('/getModule', [ModuleController::class, 'getModule']);
+
+
 });
 
 
