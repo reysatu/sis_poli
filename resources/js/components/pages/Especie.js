@@ -129,6 +129,7 @@ const Especie = () => {
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
                 crear(_especie);
             }
+            setCheckboxValue([]);
             setEspecies(_especies);
             setEspecieDialog(false);
             setEspecie(emptyEspecie);

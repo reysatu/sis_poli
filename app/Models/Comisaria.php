@@ -9,7 +9,7 @@ class Comisaria extends Model
 {
     use HasFactory;
 
-    protected $table = 'comisarias';
+    protected $table = 'comisaria';
 
     public $timestamps = true;
  

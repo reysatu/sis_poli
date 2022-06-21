@@ -129,6 +129,7 @@ const Arma = () => {
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma Creado', life: 3000 });
                 crear(_arma);
             }
+            setCheckboxValue([]);
             setArmas(_armas);
             setArmaDialog(false);
             setArma(emptyArma);
