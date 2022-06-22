@@ -98,15 +98,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reporteD/{id}', [ReporteController::class, 'destroy']);
     Route::get('/getReporte', [ReporteController::class, 'getReporte']);
 
-    // Module
+        // Module
     Route::get('/getModule', [ModuleController::class, 'getModule']);
-    
 
 
-
-
-      // Reportes Pdf
-     
 });
 
 Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
