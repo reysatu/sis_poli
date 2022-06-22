@@ -50,7 +50,7 @@ const Comisaria = () => {
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
-
+ 
 
     const [isChecked, setIsChecked] = useState(false);
     const [estado, setEstado] = useState(null);
@@ -72,6 +72,9 @@ const Comisaria = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null); 
+
+     // Buscador
+     const [filterReport, setFilterReport] = useState();
 
     useEffect(() => {
         const productService = new ProductService();
@@ -342,7 +345,7 @@ const Comisaria = () => {
             <h5 className="m-0">Administrar Comisarias</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+                <InputText type="search"  onChange={(e)=> setFilterReport(e.target.value)}  onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
             </span> 
         </div>
     );
@@ -378,7 +381,8 @@ const Comisaria = () => {
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} comisarias"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        // Modificado para que se pueda filtrar por estado
+                        globalFilter={filterReport} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                         <Column field="nom_comisaria" header="Comisaria" sortable body={nom_comisariaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
@@ -397,11 +401,10 @@ const Comisaria = () => {
                             <InputText id="nom_comisaria" value={comisaria.nom_comisaria} onChange={(e) => onInputChange(e, 'nom_comisaria')} required autoFocus className={classNames({ 'p-invalid': submitted && !comisaria.nom_comisaria })} />
                             {submitted && !comisaria.nom_comisaria && <small className="p-invalid">Comisaria es requerido.</small>}
                         </div>
-                        <label htmlFor="estado">Activo</label>
+                        <label htmlFor="estado">Estado</label>
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
-    
-                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                            <Checkbox  inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
                            </div>
                             {submitted && !comisaria.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>

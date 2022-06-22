@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PdfController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,7 +25,7 @@ use App\Http\Controllers\PdfController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user(); 
+    return $request->user();
 });
 
 
@@ -94,17 +95,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/reporteU/{id}', [ReporteController::class, 'update']);
     Route::delete('/reporteD/{id}', [ReporteController::class, 'destroy']);
     Route::get('/getReporte', [ReporteController::class, 'getReporte']);
-
-
-
-
-      // Reportes Pdf
-     
 });
 
-Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
-Route::get("reporteComisaria-pdf", [PdfController::class, "indexComiPdf"]);
 
-
-
-  
+    // Reportes Pdf
+    Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
+    Route::get("reporteComisaria-pdf", [ComisariaController::class, "indexComiPdf"]);

@@ -46,13 +46,6 @@ const Reporte = () => {
         window.open(url, "_blank");
     }
 
-   
-
-
-    const exportCSV = () => {
-        dt.current.exportCSV();
-    }
-
     // fin reportes
 
     const [products, setProducts] = useState(null);//borrar
@@ -68,6 +61,8 @@ const Reporte = () => {
     const [selectedReportes, setSelectedReportes] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    // Buscador
+    const [newTaskName, setNewTaskName] = useState();
     const toast = useRef(null);
     const dt = useRef(null);
    
@@ -84,7 +79,7 @@ const Reporte = () => {
                 setReportes(res.data)
             } 
             fetchDataReporte();  
-    }, [reporte]);
+    }, [reporte]); 
     const crear = async (data) => {
        
         const res = await ReporteService.create(data);
@@ -266,7 +261,7 @@ const Reporte = () => {
             </div>
         );
     }
-
+                                               // Buscador
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Administrar Reportees</h5>

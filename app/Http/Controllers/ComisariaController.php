@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comisaria;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 
 class ComisariaController extends Controller
 {
@@ -28,6 +30,14 @@ class ComisariaController extends Controller
 
         }
         return response()->json(['status'=>'ok','data'=>$apu], 200);
+    }
+    // Reporte PDF
+    public function indexComiPdf()
+    {
+
+        $comisaria = DB::table( 'comisaria' )->get();
+        $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisaria]);
+        return $pdf->stream();
     }
     
 
