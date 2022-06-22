@@ -11,6 +11,7 @@ use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PdfController;
 
 /*
@@ -32,6 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/list_modulos/{id}', [AuthController::class, 'list_modulos']);
 
+Route::get('/perfil_edit/{id}', [PerfilController::class, 'edit']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/infouser',[AuthController::class,'infouser']);
@@ -39,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/register',[AuthController::class,'register']);
 
     //Perfil
+    
     Route::get('/perfil', [PerfilController::class, 'index']);
     Route::post('/perfilC', [PerfilController::class, 'store']);
     Route::put('/perfilU/{id}', [PerfilController::class, 'update']);

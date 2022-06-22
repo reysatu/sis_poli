@@ -9,59 +9,63 @@ import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
+import { Checkbox } from 'primereact/checkbox'; 
+import { PickList } from 'primereact/picklist';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { ProductService } from '../service/ProductService';
 import PerfilService from "../service/PerfilService";
+import ModuleService from "../service/ModuleService";
 
 const Perfil = () => {
-    console.log('Entrando a perfiles');
-    let emptyProduct = {
-        id: null,
-        name: '',
-        image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
-    };
     let emptyPerfil = {
         idperfil: null,
         descripcion: '',
+        estado: 'A',
     };
+    // const listValue = [
+    //     { idmodulo: '1', descripcion: 'SF' },
+    //     { idmodulo: '2', descripcion: 'LDN' },
+       
+    // ];
 
-    const [products, setProducts] = useState(null);//borrar
+    const [picklistSourceValue, setPicklistSourceValue] = useState([]);
+    const [listModuleTemporal, setListModuleTemporal] = useState([]);
+    const [picklistTargetValue, setPicklistTargetValue] = useState([]);
     const [perfils, setPerfils] = useState(null);///lista de los perfiles
-    
     const [perfilDialog, setPerfilDialog] = useState(false);//cabecera del modal
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deletePerfilDialog, setDeletePerfilDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
     const [perfil, setPerfil] = useState(emptyPerfil);//estado de los  campos del perfil
-    const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [selectedPerfils, setSelectedPerfils] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [listModules, setlistModules] = useState(null);
+    const [checkboxValue, setCheckboxValue] = useState([]);
     const toast = useRef(null);
     const dt = useRef(null);
 
-    useEffect(() => {
-        const productService = new ProductService();
-        productService.getProducts().then(data => setProducts(data));
-    }, []);
-
+    
     
     useEffect(() => {
         async function fetchDataPerfil() {
             const res = await PerfilService.list();
-                setPerfils(res.data)
+                setPerfils(res.data);
+                console.log(res.data);
             } 
             fetchDataPerfil();  
     }, [perfil]);
+
+    useEffect(() => {
+        async function fetchDataModules() {
+            const res = await ModuleService.getModule();
+            setPicklistSourceValue(res.data);
+            setListModuleTemporal(res.data);
+            } 
+            fetchDataModules();  
+    }, []);
+
+    console.log("module");
+    console.log(listModules);
     const crear = async (data) => {
        
         const res = await PerfilService.create(data);
@@ -83,6 +87,10 @@ const Perfil = () => {
    
     const openNew = () => {
         setPerfil(emptyPerfil);
+        var estate_perfil='A';
+        setCheckboxValue([estate_perfil]);
+        setPicklistSourceValue(listModuleTemporal);
+        setPicklistTargetValue([]);
         setSubmitted(false);
         setPerfilDialog(true);
     }
@@ -96,32 +104,33 @@ const Perfil = () => {
         setDeletePerfilDialog(false);
     }
 
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
-    }
+ 
 
     const savePerfil = () => {
         setSubmitted(true);
-        
+        console.log("algo");
+        console.log(picklistTargetValue);
          if (perfil.descripcion.trim()) {
             let _perfils = [...perfils];
             let _perfil = { ...perfil };
-            console.log("/////");
-            console.log(perfil)
-            console.log("//////")
             if (perfil.idperfil) {
                 console.log("ingreso per");
                 const index = findIndexById(perfil.idperfil);
                 _perfils[index] = _perfil;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil modificado', life: 3000 });
+                _perfil.modules=picklistTargetValue;
                 update(perfil.idperfil,_perfil);
             }
             else {
                 console.log("ingreso crear");
                 _perfil.idperfil = "";
                 _perfils.push(_perfil);
+                _perfil.modules=picklistTargetValue;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
-                crear(_perfil);
+                console.log(_perfil);
+                let data=crear(_perfil);
+                console.log(data);
+                console.log("ffffff");
             }
             setPerfils(_perfils);
             setPerfilDialog(false);
@@ -130,10 +139,43 @@ const Perfil = () => {
     }
    
     const editPerfil = (perfil) => {
-       console.log(perfil);
-       console.log("perfil");
         setPerfil({ ...perfil });
-        setPerfilDialog(true);
+        let _perfil = { ...perfil};
+        var estate_perfil=_perfil["estado"];
+        setCheckboxValue([estate_perfil]);
+        let idperfil=perfil.idperfil;
+        setPicklistSourceValue(listModuleTemporal);
+        PerfilService.getPermisosPerfil(idperfil).then(function(result) {
+            let modules_unselect=listModuleTemporal.filter(function(modulo) {
+                console.log(modulo.idmodulo);
+                let identificador_modulo='A';
+                result.data.map(function(modulo_select){
+                    if(modulo.idmodulo==modulo_select.idmodulo){
+                        identificador_modulo='B';
+                    }
+                });
+                if(identificador_modulo=='A'){
+                    return modulo
+                }
+            });
+            let modules_select=listModuleTemporal.filter(function(modulo) {
+                console.log(modulo.idmodulo);
+                let identificador_modulo='A';
+                result.data.map(function(modulo_select){
+                    if(modulo.idmodulo==modulo_select.idmodulo){
+                        identificador_modulo='B';
+                    }
+                });
+                if(identificador_modulo=='B'){
+                    return modulo
+                }
+           
+             });
+            
+            setPicklistSourceValue(modules_unselect);
+            setPicklistTargetValue(modules_select);
+            setPerfilDialog(true);
+          })
       
     }
 
@@ -145,13 +187,7 @@ const Perfil = () => {
         setDeletePerfilDialog(true);
 
     }
-    const deleteSelectedProducts = () => {
-        let _perfils = products.filter(val => !selectedProducts.includes(val));
-        setPerfils(_perfils);
-        setDeletePerfilDialog(false);
-        setSelectedPerfils(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-    }
+    
     const deletePerfil = () => {
         eliminar(perfil.idperfil);
         let _perfils = perfils.filter(val => val.idperfil !== perfil.idperfil);
@@ -172,17 +208,9 @@ const Perfil = () => {
 
         return index;
     }
-
-
     const exportCSV = () => {
         dt.current.exportCSV();
     }
-
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    }
-
-
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
       
@@ -191,17 +219,12 @@ const Perfil = () => {
         _perfil[`${name}`] = val;
        
         setPerfil(_perfil);
-
-       
     }
-
-
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-                    <Button label="Eliminar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
                 </div>
             </React.Fragment>
         )
@@ -224,11 +247,36 @@ const Perfil = () => {
             </>
         );
     }
+    const onCheckboxChange = (e) => {
+        setCheckboxValue([]);
+        let selectedValue = [...checkboxValue];
+        if (e.checked)
+            selectedValue.push(e.value);
+        else
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+        setCheckboxValue(selectedValue);
+        let state_perfil='I';
+        if (e.checked){
+            state_perfil='A';
+        }
+        let _perfil = { ...perfil };
+        _perfil["estado"] =state_perfil ;
+        setPerfil(_perfil);
+      
+    };
     const descripcionBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">descripcion</span>
                 {rowData.descripcion}
+            </>
+        );
+    }
+    const estadoBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">status_description</span>
+                {rowData.status_description}
             </>
         );
     }
@@ -267,12 +315,7 @@ const Perfil = () => {
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deletePerfil} />
         </>
     );
-    const deleteProductsDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
-        </>
-    );
+ 
 
     return (
         <div className="grid crud-demo">
@@ -285,19 +328,35 @@ const Perfil = () => {
                         dataKey="idperfil" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        globalFilter={globalFilter} emptyMessage="No perfils found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
                         <Column field="descripcion" header="Perfil" sortable body={descripcionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
+                        </Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '450px' }} header="Detalles de Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '650px' }} header="Detalles de Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="descripcion">Perfil</label>
+                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
+                            </div>
+                            
+                            <div className="field col">
+                                <label htmlFor="estado">Activo</label>
+                                <div className="field-checkbox">
+                                <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />   
+                                </div>
+                            </div>
+                        </div>
                         <div className="field">
-                            <label htmlFor="descripcion">Perfil</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
-                            {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
+                            <h5>Modulos</h5>
+                            <PickList source={picklistSourceValue} target={picklistTargetValue} sourceHeader="Lista de módulos" targetHeader="Permisos de perfil" itemTemplate={(item) => <div>{item.descripcion}</div>}
+                                onChange={(e) => { setPicklistSourceValue(e.source); setPicklistTargetValue(e.target) }} sourceStyle={{ height: '200px' }} targetStyle={{ height: '200px' }}></PickList>
                         </div>
                     </Dialog>
 
@@ -306,16 +365,11 @@ const Perfil = () => {
                     <Dialog visible={deletePerfilDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deletePerfilDialogFooter} onHide={hideDeletePerfilDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {perfil && <span>Estás seguro de que quieres eliminar el perfil<b>{perfil.descripcion}</b>?</span>}
+                            {perfil && <span>Estás seguro de que quieres eliminar el perfil <b>{perfil.descripcion}</b>?</span>}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
-                        </div>
-                    </Dialog>
+                   
                 </div>
             </div>
         </div>
