@@ -402,7 +402,7 @@ const estadoBodyTemplate = (rowData) => {
                             <InputText id="calibre" value={arma.calibre} onChange={(e) => onInputChange(e, 'calibre')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.calibre })} />
                             {submitted && !arma.calibre && <small className="p-invalid">Arma es requerido.</small>}
                         </div>
-
+                        <label htmlFor="estado">Estado</label>
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
                            

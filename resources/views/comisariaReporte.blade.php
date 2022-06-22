@@ -51,7 +51,7 @@
                 <th>Estado</th>
             </tr>
 
-            @foreach ($comisaria as $comisaria)
+            @foreach ($comisarias as $comisaria)
                 <tr>
                     <td>{{ $comisaria->id }}</td>
                     <td>{{$comisaria->nom_comisaria}}</td>
