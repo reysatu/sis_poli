@@ -105,7 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
-Route::get("reporteComisaria-pdf", [PdfController::class, "indexComiPdf"]);
+Route::get("reporteComisaria-pdf", [ComisariaController::class, "indexComiPdf"]);
 
 
 

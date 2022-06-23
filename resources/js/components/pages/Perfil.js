@@ -17,7 +17,7 @@ import { InputText } from 'primereact/inputtext';
 import PerfilService from "../service/PerfilService";
 import ModuleService from "../service/ModuleService";
 
-const Perfil = () => {
+const Perfil = () => { 
     let emptyPerfil = {
         idperfil: null,
         descripcion: '',
@@ -42,6 +42,7 @@ const Perfil = () => {
     const [listModules, setlistModules] = useState(null);
     const [checkboxValue, setCheckboxValue] = useState([]);
     const toast = useRef(null);
+    const [titlePerfil,setTitlePerfil]=useState('');
     const dt = useRef(null);
 
     
@@ -93,6 +94,7 @@ const Perfil = () => {
         setPicklistTargetValue([]);
         setSubmitted(false);
         setPerfilDialog(true);
+        setTitlePerfil('Nuevo Perfil');
     }
 
     const hideDialog = () => {
@@ -175,6 +177,7 @@ const Perfil = () => {
             setPicklistSourceValue(modules_unselect);
             setPicklistTargetValue(modules_select);
             setPerfilDialog(true);
+            setTitlePerfil('Editar Perfil')
           })
       
     }
@@ -338,7 +341,7 @@ const Perfil = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '650px' }} header="Detalles de Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '650px' }} header={titlePerfil} modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
                     <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="descripcion">Perfil</label>

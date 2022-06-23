@@ -31,14 +31,19 @@ class ComisariaController extends Controller
         }
         return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
+
     // Reporte PDF
     public function indexComiPdf()
     {
-
-        $comisaria = DB::table( 'comisaria' )->get();
+        $comisaria = DB::table( 'comisaria' )
+        ->get();
         $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisaria]);
         return $pdf->stream();
-    }
+    } 
+
+  
+
+    // ---------------------
     
 
     public function store(Request $request)

@@ -60,6 +60,7 @@ const Persona = () => {
     const [selectedPersonas, setSelectedPersonas] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [titlePersona,setTitlePersona]=useState('');
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -96,6 +97,7 @@ const Persona = () => {
         setPersona(emptyPersona);
         setSubmitted(false);
         setPersonaDialog(true);
+        setTitlePersona('Nueva Persona');
     }
 
     const hideDialog = () => {
@@ -141,6 +143,7 @@ const Persona = () => {
        
         setPersona({ ...persona });
         setPersonaDialog(true);
+        setTitlePersona('Editar Persona');
       
     }
 
@@ -213,7 +216,7 @@ const Persona = () => {
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
+                {/* <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" /> */}
                 <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
             </React.Fragment>
         )
@@ -398,7 +401,7 @@ const Persona = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={personaDialog} style={{ width: '450px' }} header="Detalle de Persona" modal className="p-fluid" footer={personaDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={personaDialog} style={{ width: '450px' }} header={titlePersona} modal className="p-fluid" footer={personaDialogFooter} onHide={hideDialog}>
 
                         <div className="field">
                             <label htmlFor="dni">DNI</label>

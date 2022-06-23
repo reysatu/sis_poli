@@ -97,4 +97,8 @@ Comisaria.eliminar = async (id) => {
         });
     return res;
 };
+
+
+
+
 export default Comisaria;

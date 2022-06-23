@@ -78,6 +78,7 @@ const Usuario = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [titleUsuario,setTitleUsuario]=useState('');
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -129,6 +130,7 @@ const Usuario = () => {
         setPerfil(false);
         setSubmitted(false);
         setUsuarioDialog(true);
+        setTitleUsuario('Nuevo Usuario');
       
     }
 
@@ -201,6 +203,7 @@ const Usuario = () => {
         setPerfil(arrayFilter[0]);
         setUsuario({ ...usuario });
         setUsuarioDialog(true);
+        setTitleUsuario('Editar Usuario');
     }
 
     const confirmDeleteUsuario = (usuario) => {
@@ -484,7 +487,7 @@ const Usuario = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={usuarioDialog} style={{ width: '450px' }} header="Detalle de Usuario" modal className="p-fluid" footer={usuarioDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={usuarioDialog} style={{ width: '450px' }} header={titleUsuario} modal className="p-fluid" footer={usuarioDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="name">Perfil</label>
                             <Dropdown value={perfil} onChange={(e) => onInputSelect(e.value,'idperfil')} optionLabel="descripcion"  autoFocus options={listperfils} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !usuario.idperfil })}/>
