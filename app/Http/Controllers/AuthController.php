@@ -73,7 +73,7 @@ class AuthController extends Controller
     }
     public function list_modulos($id)
     {
-        $data = DB::select(" SELECT m.idmodulo as idmodulo, m.descripcion as modulos, mo.descripcion as submodulos, mo.idmodulo as idsubmodulo, m.icono as icono , mo.url as url from permisos as p INNER JOIN modulos as m ON p.idmodulo=m.idmodulo INNER JOIN modulos as mo ON mo.padre=m.idmodulo where p.idperfil='$id' order by m.idmodulo");
+        $data = DB::select(" SELECT m.idmodulo as idmodulo, m.descripcion as modulos, mo.descripcion as submodulos, mo.idmodulo as idsubmodulo, m.icono as icono , mo.url as url from permisos as p INNER JOIN modulos as m ON p.idmodulo=m.idmodulo INNER JOIN modulos as mo ON mo.padre=m.idmodulo where p.idperfil='$id' and p.deleted_at IS NULL  order by m.idmodulo");
         $response['data'] = $data;
         return $response;
     }

@@ -25,17 +25,16 @@ class PdfController extends Controller
 
    
 
-    public function indexPdf()
+    public function indexPdf(Request $request)
     {
-
-    //     // $reportes = Pdfs::all()
-        $reportes = DB::table( 'reporte' )->get();
-    //     // $pdf = PDF::loadView('reporte', ['reportes' => $reportes])->setPaper('a4', 'landscape')->setWarnings(false);
-
-    //     // return response()->streamDownload(function () use ($pdf) {
-    //     //     echo $pdf->output();
-    //     // }, 'reporte.pdf');
-       
+        $data=$request->all();
+        $reportes;
+        if (isset($data["search"])) {
+            $text_search=$data["search"];
+            $reportes = DB::table( 'reporte' )->where('descripcion', 'like', '%'.$text_search.'%')->get();
+        }else{
+            $reportes = DB::table( 'reporte' )->get();
+        }
         $pdf = PDF::loadView('reporte', ['reportes' => $reportes]);
         return $pdf->stream();
     }

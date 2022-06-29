@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Permiso extends Model
 {
     use HasFactory;
+    
     use SoftDeletes;
+
     protected $table = 'permisos';
 
     public $timestamps = true;
