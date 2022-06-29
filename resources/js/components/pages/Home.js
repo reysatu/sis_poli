@@ -48,6 +48,7 @@ import Vehiculo from "../pages/Vehiculo";
 import Especie from '../pages/Especie';
 import Persona from '../pages/Persona';
 import Reporte from '../pages/Reporte';
+import Denuncia from '../pages/Denuncia';
 
 
 
@@ -517,6 +518,7 @@ const Home = () => {
                     <Route path="/Persona" component={Persona} />
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
+                    <Route path="/Denuncia" component={Denuncia} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />

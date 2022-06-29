@@ -16,7 +16,7 @@ import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 import ComisariaService from "../service/ComisariaService";
 
-import { axios, baseUrl } from '../service/PdfService'; 
+// import { axios, baseUrl } from '../service/PdfService'; 
 
 const Comisaria = () => {
     console.log("entrando a comisarias");
@@ -41,12 +41,12 @@ const Comisaria = () => {
 
 
      // reportes
-     const getPdf = async () => {
-        const response =  await axios.get( `${baseUrl}/reporteComisaria-pdf` , {responseType: "blob"});
+    //  const getPdf = async () => {
+    //     const response =  await axios.get( `${baseUrl}/reporteComisaria-pdf` , {responseType: "blob"});
 
-        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
-        window.open(url, "_blank");
-    }
+    //     const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+    //     window.open(url, "_blank");
+    // }
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
@@ -300,7 +300,7 @@ const Comisaria = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" />
             </React.Fragment>
         )
     }

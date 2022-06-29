@@ -14,8 +14,8 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
 // Componente para el reporte
-import { axios, baseUrl } from '../service/PdfService'; 
-
+// import { axios, baseUrl } from '../service/PdfService'; 
+import PdfService from '../service/PdfService'; 
 import ReporteService from "../service/ReporteService";
 
 
@@ -40,8 +40,7 @@ const Reporte = () => {
 
     // reportes
     const getPdf = async () => {
-        const response =  await axios.get( `${baseUrl}/reporte-pdf` , {responseType: "blob"});
-
+        const response =  await PdfService.getPdf(globalFilter);
         const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
         window.open(url, "_blank");
     }

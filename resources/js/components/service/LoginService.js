@@ -14,7 +14,7 @@ Login.list = async () => {
     return res;
 };
 
-
+ 
 Login.logout = async () => {
     const logueo=window.localStorage.getItem("logueo");
     const user=JSON.parse(logueo);
@@ -22,6 +22,7 @@ Login.logout = async () => {
 
     const config = {
         headers: { Authorization: `Bearer ${tokend}`}
+        
     };
     const urLogout = baseUrl + "/logout";
     const res = await axios
