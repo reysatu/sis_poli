@@ -36,14 +36,15 @@
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
-            background-color: #04AA6D;
+            background-color: #044f21;
             color: white;
         }
 
     </style>
 </head>
 <body>
-    <h1>Reporte de comisarias</h1>
+    <h1><img class="derecha" src="assets/layout/images/dirtic.png" width="100" height="100"><br>Reporte de comisarias</h1>
+    <hr>
     <table id="customers">
             <tr>
                 <th>id</th>

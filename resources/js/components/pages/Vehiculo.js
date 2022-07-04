@@ -38,6 +38,15 @@ const Vehiculo = () => {
         estado: 'A',
     };
 
+     // reportes
+     const getPdf = async () => {
+        const response =  await VehiculoService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
+    // fin reportes
+
     const [checkboxValue, setCheckboxValue] = useState([]);
 
     const [products, setProducts] = useState(null);//borrar
@@ -249,7 +258,7 @@ const Vehiculo = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }

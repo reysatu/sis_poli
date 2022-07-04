@@ -14,18 +14,6 @@ use Barryvdh\DomPDF\Facade\PDF;
 class PdfController extends Controller
 {
 
-    // public function index(Request $request)
-    // {
-    //     $idreporte = $request->get('idreporte');
-    //     $descripcion = $request->get('descripcion');
-
-    //     $reportes = ComiPdf::ordenBy('id', 'DESC')
-    //     ->where();
-    // }
-
-
-   
-
     public function indexPdf(Request $request)
     {
         $data=$request->all();

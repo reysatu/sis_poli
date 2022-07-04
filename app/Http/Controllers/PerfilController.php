@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\models\Perfil;
 use App\models\Permiso;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 class PerfilController extends Controller
 {
    
@@ -27,6 +29,21 @@ class PerfilController extends Controller
         }
         return response()->json(['status'=>'ok','data'=>$list_perfil], 200);
     }
+
+      // Reporte PDF
+      public function indexPerfilPdf(Request $request)
+      {
+          $data=$request->all();
+          if (isset($data["search"])) {
+              $text_search=$data["search"];
+              $perfils = DB::table( 'perfil' )->where('name', 'like', '%'.$text_search.'%')->get();
+          }else{
+              $perfils = DB::table( 'perfil' )->get();
+          }
+          $pdf = PDF::loadView('perfilReporte', ['perfils' => $perfils]);
+          return $pdf->stream();
+      } 
+
     
     public function store(Request $request)
     {   $data=$request->all();

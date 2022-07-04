@@ -33,11 +33,16 @@ class ComisariaController extends Controller
     }
 
     // Reporte PDF
-    public function indexComiPdf()
+    public function indexComiPdf(Request $request)
     {
-        $comisaria = DB::table( 'comisaria' )
-        ->get();
-        $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisaria]);
+        $data=$request->all();
+        if (isset($data["search"])) {
+            $text_search=$data["search"];
+            $comisarias = DB::table( 'comisaria' )->where('nom_comisaria', 'like', '%'.$text_search.'%')->get();
+        }else{
+            $comisarias = DB::table( 'comisaria' )->get();
+        }
+        $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisarias])->setPaper('a4', 'landscape');
         return $pdf->stream();
     } 
 

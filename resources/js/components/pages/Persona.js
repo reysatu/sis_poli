@@ -45,6 +45,15 @@ const Persona = () => {
         situacion: '',
     };
 
+      // reportes
+      const getPdf = async () => {
+        const response =  await PersonaService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
+    // fin reportes
+
     const [products, setProducts] = useState(null);//borrar
     const [personaDialog, setPersonaDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
@@ -217,7 +226,7 @@ const Persona = () => {
         return (
             <React.Fragment>
                 {/* <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" /> */}
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 class UserController extends Controller
 {
     /**
@@ -15,6 +17,20 @@ class UserController extends Controller
     {
         return response()->json(['status'=>'ok','data'=>User::all()], 200);
     }
+
+        // Reporte PDF
+        public function indexUserPdf(Request $request)
+        {
+            $data=$request->all();
+            if (isset($data["search"])) {
+                $text_search=$data["search"];
+                $users = DB::table( 'users' )->where('name', 'like', '%'.$text_search.'%')->get();
+            }else{
+                $users = DB::table( 'users' )->get();
+            }
+            $pdf = PDF::loadView('userReporte', ['users' => $users])->setPaper('a4', 'landscape');
+            return $pdf->stream();
+        } 
 
     /**
      * Show the form for creating a new resource.

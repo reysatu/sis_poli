@@ -108,5 +108,21 @@ Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
 Route::get("reporteComisaria-pdf", [ComisariaController::class, "indexComiPdf"]);
 
 
+Route::get("reportePerson-pdf", [PersonaController::class, "indexPersonPdf"]);
+
+
+Route::get("reporteEspecie-pdf", [EspecieController::class, "indexEspePdf"]);
+
+
+Route::get("reporteVehiculo-pdf", [VehiculoController::class, "indexVehiPdf"]);
+
+
+Route::get("reporteArma-pdf", [ArmaController::class, "indexArmaPdf"]);
+
+Route::get("reporteUsers-pdf", [UserController::class, "indexUserPdf"]);
+
+Route::get("reportePerfil-pdf", [PerfilController::class, "indexPerfilPdf"]);
+
+
 
   

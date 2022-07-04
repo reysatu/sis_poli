@@ -51,6 +51,15 @@ const Usuario = () => {
         celular: '122',
     };
 
+       // reportes
+       const getPdf = async () => {
+        const response =  await UsuarioService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
+    // fin reportes
+
     const listboxValues = [
         { name: 'Seleccionar', code: '' },
         { name: 'Administrador', code: '1' },
@@ -305,7 +314,7 @@ const Usuario = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }

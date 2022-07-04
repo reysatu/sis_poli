@@ -41,12 +41,12 @@ const Comisaria = () => {
 
 
      // reportes
-    //  const getPdf = async () => {
-    //     const response =  await axios.get( `${baseUrl}/reporteComisaria-pdf` , {responseType: "blob"});
 
-    //     const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
-    //     window.open(url, "_blank");
-    // }
+     const getPdf = async () => {
+        const response =  await ComisariaService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
@@ -300,7 +300,7 @@ const Comisaria = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help"onClick={getPdf} />
             </React.Fragment>
         )
     }
