@@ -13,6 +13,9 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\LibroController;
+use App\Http\Controllers\SeccionController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -101,6 +104,21 @@ Route::middleware('auth:sanctum')->group(function () {
         // Module
     Route::get('/getModule', [ModuleController::class, 'getModule']);
 
+    // libro
+
+    Route::get('/libro', [LibroController::class, 'index']);
+    Route::post('/libroC', [LibroController::class, 'store']);
+    Route::put('/libroU/{id}', [LibroController::class, 'update']);
+    Route::delete('/libroD/{id}', [LibroController::class, 'destroy']);
+    Route::get('/getLibro', [LibroController::class, 'getLibro']);
+
+    // Secciones
+
+    Route::get('/seccion', [SeccionController::class, 'index']);
+    Route::post('/seccionC', [SeccionController::class, 'store']);
+    Route::put('/seccionU/{id}', [SeccionController::class, 'update']);
+    Route::delete('/seccionD/{id}', [SeccionController::class, 'destroy']);
+    Route::get('/getSeccion', [SeccionController::class, 'getSeccion']);
 
 });
 
@@ -122,6 +140,10 @@ Route::get("reporteArma-pdf", [ArmaController::class, "indexArmaPdf"]);
 Route::get("reporteUsers-pdf", [UserController::class, "indexUserPdf"]);
 
 Route::get("reportePerfil-pdf", [PerfilController::class, "indexPerfilPdf"]);
+
+Route::get('/libroReporte-pdf', [LibroController::class, 'indexLibroPdf']);
+
+Route::get('/seccionReporte-pdf', [SeccionController::class, 'indexSeccionPdf']);
 
 
 
