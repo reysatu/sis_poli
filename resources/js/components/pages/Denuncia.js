@@ -22,6 +22,10 @@ import { CountryService } from '../service/CountryService';
 import { NodeService } from '../service/NodeService';
 import  PersonaService from "../service/PersonaService";
 import  ArmaService from "../service/ArmaService";
+import  EspecieService from "../service/EspecieService";
+import  VehiculoService from "../service/VehiculoService";
+import  SeccionService from "../service/SeccionService";
+import  LibroService from "../service/LibroService";
 import  ModalityService from "../service/ModalityService";
 import { Dropdown } from 'primereact/dropdown';
 
@@ -35,6 +39,7 @@ const Denuncia = () => {
     let empty_complaint = {
         id: null,
         idModalidad:'',
+        idSecction:'',
         formalidad: '',
         fechaHecho: '',
         horaHecho: '',
@@ -78,9 +83,28 @@ const Denuncia = () => {
     const [complaint, setComplaint] = useState(empty_complaint);
     const [modality, setModality] = useState(null);
     const [listModalities, setListModalities] = useState(null);
+
+
+    const [libro, setLibro] = useState(null);
+    const [listLibros, setListLibros] = useState(null);
+   
+    const [secction, setSecttion] = useState(null);
+    const [listSecctios, setListSecctios] = useState(null);
+   
+    // Vehiculo
+    const [selectedVehiculo, setselectedVehiculo] = useState(null);
+    const [autoFilteredVehiculo, setAutoFilteredVehiculo] = useState([]);
+    const [autoVehiculoValue, setAutoVehiculoValue] = useState(null);
+    // Especie
+    const [selectedEspecie, setselectedEspecie] = useState(null);
+    const [autoFilteredEspecie, setAutoFilteredEspecie] = useState([]);
+    const [autoEspecieValue, setAutoEspecieValue] = useState(null);
+    // Arma
     const [selectedArma, setselectedArma] = useState(null);
     const [autoFilteredArma, setAutoFilteredArma] = useState([]);
     const [autoArmaValue, setAutoArmaValue] = useState(null);
+    const [titleDenuncia,setTitleDenuncia]=useState('');
+
     useEffect(() => {
         async function fetchDataModality() {
             const res = await ModalityService.list();
@@ -90,6 +114,26 @@ const Denuncia = () => {
             } 
             fetchDataModality();  
     }, []);
+
+    useEffect(() => {
+        async function fetchDataSection() {
+            const res = await SeccionService.list();
+            setListSecctios(res.data)
+                console.log(res.data);
+                console.log("algo sections");
+            } 
+            fetchDataSection();  
+    }, []);
+    useEffect(() => {
+        async function fetchDataLibros() {
+            const res = await LibroService.list();
+            setListLibros(res.data)
+                console.log(res.data);
+                console.log("algo libros");
+            } 
+            fetchDataLibros();  
+    }, []);
+
 
     
 
@@ -101,7 +145,25 @@ const Denuncia = () => {
             } 
             fetchDataModules();  
     }, []);
+
+    // Vehiculo
+    useEffect(() => {
+        async function fetchDataVehiculo() {
+                const result = await VehiculoService.getVehiculoSearch();
+                setAutoVehiculoValue(result.data);
+            } 
+            fetchDataVehiculo();  
+    }, []);
     
+    // Especie
+    useEffect(() => {
+        async function fetchDataEspecie() {
+                const result = await EspecieService.getEspecieSearch();
+                setAutoEspecieValue(result.data);
+            } 
+            fetchDataEspecie();  
+    }, []);
+    // Arma
     useEffect(() => {
         async function fetchDataArma() {
                 const result = await ArmaService.getArmaSearch();
@@ -110,6 +172,7 @@ const Denuncia = () => {
             fetchDataArma();  
     }, []);
 
+    // Persona
     useEffect(() => {
         async function fetchDataPersonas() {
                 const result = await PersonaService.getPersonaSearch();
@@ -153,6 +216,32 @@ const Denuncia = () => {
         }, 250);
     };
 
+    const searchEspecie = (event) => {
+        setTimeout(() => {
+            if (!event.query.trim().length) {
+                setAutoFilteredEspecie([...autoEspecieValue]);
+            }
+            else {
+                setAutoFilteredEspecie(autoEspecieValue.filter((person) => {
+                    return person.full_name.toLowerCase().startsWith(event.query.toLowerCase());
+                }));
+            }
+        }, 250);
+    };
+
+    const searchVehiculo = (event) => {
+        setTimeout(() => {
+            if (!event.query.trim().length) {
+                setAutoFilteredVehiculo([...autoVehiculoValue]);
+            }
+            else {
+                setAutoFilteredVehiculo(autoVehiculoValue.filter((person) => {
+                    return person.full_name.toLowerCase().startsWith(event.query.toLowerCase());
+                }));
+            }
+        }, 250);
+    };
+
     const crear = async (data) => {
         const res = await PerfilService.create(data);
     }
@@ -172,6 +261,7 @@ const Denuncia = () => {
         setPicklistTargetValue([]);
         setSubmitted(false);
         setPerfilDialog(true);
+        setTitleDenuncia('Nueva Denuncia');
     }
 
     const hideDialog = () => {
@@ -184,6 +274,14 @@ const Denuncia = () => {
     }
 
     const onInputSelectModality = (val,name) => {
+     
+        
+    }
+    const onInputSelectSecction = (val,name) => {
+     
+        
+    }
+    const onInputSelectLibro = (val,name) => {
      
         
     }
@@ -256,6 +354,8 @@ const Denuncia = () => {
             setPicklistSourceValue(modules_unselect);
             setPicklistTargetValue(modules_select);
             setPerfilDialog(true);
+
+            setTitleDenuncia('Ampliar Denuncia')
           })
       
     }
@@ -418,12 +518,12 @@ const Denuncia = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '80%',height:'100%' }} header="Detalles de Denuncia" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '80%',height:'100%' }} header={titleDenuncia} modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
                     <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="descripcion">Modalidad</label>
-                                <Dropdown value={modality} onChange={(e) => onInputSelectModality(e.value,'idperfil')} optionLabel="descripcion"  autoFocus options={listModalities} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !complaint.idModalidad })}/>
-                                {submitted && !complaint.idModalidad && <small className="p-invalid">Modalidad es requerido.</small>}
+                                <Dropdown value={modality} onChange={(e) => onInputSelectModality(e.value,'idperfil')} optionLabel="descripcion"  autoFocus options={listModalities} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !complaint.idSecction })}/>
+                                {submitted && !complaint.idSecction && <small className="p-invalid">Modalidad es requerido.</small>}
                          </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Tipo Denuncia</label>
@@ -432,13 +532,13 @@ const Denuncia = () => {
                             </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Sección</label>
-                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
-                                {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
+                                <Dropdown  value={secction} onChange={(e) => onInputSelectSecction(e.value, 'idperfil') } optionLabel="descripcion"  autoFocus options={listSecctios} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !complaint.idModalidad })}/>
+                                {submitted && !complaint.idModalidad && <small className="p-invalid">Modalidad es requerido.</small>}
                             </div>
                             <div className="field col-3 ">
-                                <label htmlFor="descripcion">Libro</label>
-                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
-                                {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
+                            <label htmlFor="descripcion">Libro</label>
+                                <Dropdown  value={libro} onChange={(e) => onInputSelectLibro(e.value, 'idperfil') } optionLabel="descripcion"  autoFocus options={listLibros} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !complaint.idModalidad })}/>
+                                {submitted && !complaint.idModalidad && <small className="p-invalid">Modalidad es requerido.</small>}
                             </div>
                     </div>
                     <div className="formgrid grid">
@@ -565,7 +665,7 @@ const Denuncia = () => {
                                 <label htmlFor="address">Especie</label>
                                 <div className="p-inputgroup">
                                     <span className="p-float-label">
-                                    <AutoComplete  placeholder="Buscar Especie" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                    <AutoComplete  placeholder="Buscar Especie" id="dd"   value={selectedEspecie} onChange={(e) => setselectedEspecie(e.value)} suggestions={autoFilteredEspecie} completeMethod={searchEspecie} field="full_name" />
                                     </span>
                                     <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                                 </div>
@@ -574,7 +674,7 @@ const Denuncia = () => {
                                 <label htmlFor="address">Vehiculo</label>
                                 <div className="p-inputgroup">
                                     <span className="p-float-label">
-                                    <AutoComplete  placeholder="Buscar Vehículo" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                    <AutoComplete  placeholder="Buscar Vehículo" id="dd"   value={selectedVehiculo} onChange={(e) => setselectedVehiculo(e.value)} suggestions={autoFilteredVehiculo} completeMethod={searchVehiculo} field="full_name" />
                                     </span>
                                     <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                                 </div>

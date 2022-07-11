@@ -81,6 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/vehiculoU/{id}', [VehiculoController::class, 'update']);
     Route::delete('/vehiculoD/{id}', [VehiculoController::class, 'destroy']);
     Route::get('/getVehiculo', [VehiculoController::class, 'getVehiculo']);
+    Route::get('/get_vehiculo_search', [VehiculoController::class, 'get_vehiculo_search']);
 
     // Especie
 
@@ -89,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/especieU/{id}', [EspecieController::class, 'update']);
     Route::delete('/especieD/{id}', [EspecieController::class, 'destroy']);
     Route::get('/getEspecie', [EspecieController::class, 'getEspecie']);
+    Route::get('/get_especie_search', [EspecieController::class, 'get_especie_search']);
 
 
     // persona

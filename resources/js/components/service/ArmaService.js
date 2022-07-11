@@ -58,7 +58,7 @@ Arma.getArmaSearch = async () => {
         });
     return res;
 };
-
+ 
 Arma.create = async (data) => {
     const urlvalida = baseUrl+"/armaC";
     const logueo=window.localStorage.getItem("logueo");

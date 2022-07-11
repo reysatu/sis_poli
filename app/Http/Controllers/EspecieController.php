@@ -32,6 +32,19 @@ class EspecieController extends Controller
         
     }
 
+    public function get_especie_search()
+    {
+        $query_especie=Especie::all(['idespecie','especie','situacion','documento']);
+        $data_especie = [];
+        foreach ($query_especie as $item) { 
+            $data_especie[] = [
+                'idespecie'=>$item->idespecie,
+                'full_name' => $item->especie.' '.$item->situacion.' '.$item->documento,
+            ];
+        }
+        return response()->json(['status'=>'ok','data'=>$data_especie], 200);
+    }
+
       // Reporte PDF
     public function indexEspePdf(Request $request)
     {

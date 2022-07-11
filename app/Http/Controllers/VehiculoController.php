@@ -34,6 +34,19 @@ class VehiculoController extends Controller
         return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
 
+    public function get_vehiculo_search()
+    {
+        $query_vehiculo=Vehiculo::all(['idvehiculo','clase','marca','modelo']);
+        $data_vehiculo = [];
+        foreach ($query_vehiculo as $item) { 
+            $data_vehiculo[] = [
+                'idvehiculo'=>$item->idvehiculo,
+                'full_name' => $item->clase.' '.$item->marca.' '.$item->modelo,
+            ];
+        }
+        return response()->json(['status'=>'ok','data'=>$data_vehiculo], 200);
+    }
+
       // Reporte PDF
       public function indexVehiPdf(Request $request)
       {
