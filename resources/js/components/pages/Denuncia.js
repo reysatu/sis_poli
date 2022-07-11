@@ -16,20 +16,46 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import PerfilService from "../service/PerfilService";
 import ModuleService from "../service/ModuleService";
+import { AutoComplete } from 'primereact/autocomplete';
 import {Calendar} from 'primereact/calendar';
+import { CountryService } from '../service/CountryService';
+import { NodeService } from '../service/NodeService';
+import  PersonaService from "../service/PersonaService";
+import  ArmaService from "../service/ArmaService";
+import  ModalityService from "../service/ModalityService";
+import { Dropdown } from 'primereact/dropdown';
 
 const Denuncia = () => {
+    let list_modalities;
     let emptyPerfil = {
         idperfil: null,
         descripcion: '',
         estado: 'A',
+    };
+    let empty_complaint = {
+        id: null,
+        idModalidad:'',
+        formalidad: '',
+        fechaHecho: '',
+        horaHecho: '',
+        lugarHecho: '',
+        direccionHecho: '',
+        latitudHecho: '',
+        altitudHecho: '',
+        descripcion: '',
     };
     // const listValue = [
     //     { idmodulo: '1', descripcion: 'SF' },
     //     { idmodulo: '2', descripcion: 'LDN' },
        
     // ];
-
+    const [autoValue, setAutoValue] = useState(null);
+    const [treeSelectNodes, setTreeSelectNodes] = useState(null);
+    const [selectedDenunciante, setselectedDenunciante] = useState(null);
+    
+    const [selectedAutoValue, setSelectedAutoValue] = useState(null);
+    const [autoFilteredValue, setAutoFilteredValue] = useState([]);
+   
     const [picklistSourceValue, setPicklistSourceValue] = useState([]);
     const [listModuleTemporal, setListModuleTemporal] = useState([]);
     const [picklistTargetValue, setPicklistTargetValue] = useState([]);
@@ -46,16 +72,26 @@ const Denuncia = () => {
     const toast = useRef(null);
     const dt = useRef(null);
 
-    
-    
+    const [selectedDenunciado, setselectedDenunciado] = useState(null);
+    const [autoFilteredPerson, setAutoFilteredPerson] = useState([]);
+    const [autoPersonValue, setAutoPersonValue] = useState(null);
+    const [complaint, setComplaint] = useState(empty_complaint);
+    const [modality, setModality] = useState(null);
+    const [listModalities, setListModalities] = useState(null);
+    const [selectedArma, setselectedArma] = useState(null);
+    const [autoFilteredArma, setAutoFilteredArma] = useState([]);
+    const [autoArmaValue, setAutoArmaValue] = useState(null);
     useEffect(() => {
-        async function fetchDataPerfil() {
-            const res = await PerfilService.list();
-                setPerfils(res.data);
+        async function fetchDataModality() {
+            const res = await ModalityService.list();
+                setListModalities(res.data)
                 console.log(res.data);
+                console.log("algo modality");
             } 
-            fetchDataPerfil();  
-    }, [perfil]);
+            fetchDataModality();  
+    }, []);
+
+    
 
     useEffect(() => {
         async function fetchDataModules() {
@@ -65,9 +101,58 @@ const Denuncia = () => {
             } 
             fetchDataModules();  
     }, []);
+    
+    useEffect(() => {
+        async function fetchDataArma() {
+                const result = await ArmaService.getArmaSearch();
+                setAutoArmaValue(result.data);
+            } 
+            fetchDataArma();  
+    }, []);
 
-    console.log("module");
-    console.log(listModules);
+    useEffect(() => {
+        async function fetchDataPersonas() {
+                const result = await PersonaService.getPersonaSearch();
+                setAutoPersonValue(result.data);
+            } 
+            fetchDataPersonas();  
+    }, []);
+
+    useEffect(() => {
+        const countryService = new CountryService();
+        const nodeService = new NodeService();
+        countryService.getCountries().then(data => setAutoValue(data));
+       
+        // nodeService.getTreeNodes().then(data => setTreeSelectNodes(data));
+    }, []);
+    
+    
+    const searchPerson = (event) => {
+        setTimeout(() => {
+            if (!event.query.trim().length) {
+                setAutoFilteredPerson([...autoPersonValue]);
+            }
+            else {
+                setAutoFilteredPerson(autoPersonValue.filter((person) => {
+                    return person.full_name.toLowerCase().startsWith(event.query.toLowerCase());
+                }));
+            }
+        }, 250);
+    };
+
+    const searchArma = (event) => {
+        setTimeout(() => {
+            if (!event.query.trim().length) {
+                setAutoFilteredArma([...autoArmaValue]);
+            }
+            else {
+                setAutoFilteredArma(autoArmaValue.filter((person) => {
+                    return person.full_name.toLowerCase().startsWith(event.query.toLowerCase());
+                }));
+            }
+        }, 250);
+    };
+
     const crear = async (data) => {
         const res = await PerfilService.create(data);
     }
@@ -98,17 +183,20 @@ const Denuncia = () => {
         setDeletePerfilDialog(false);
     }
 
+    const onInputSelectModality = (val,name) => {
+     
+        
+    }
  
 
     const savePerfil = () => {
         setSubmitted(true);
-        console.log("algo");
-        console.log(picklistTargetValue);
+    
          if (perfil.descripcion.trim()) {
             let _perfils = [...perfils];
             let _perfil = { ...perfil };
             if (perfil.idperfil) {
-                console.log("ingreso per");
+               
                 const index = findIndexById(perfil.idperfil);
                 _perfils[index] = _perfil;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil modificado', life: 3000 });
@@ -116,15 +204,14 @@ const Denuncia = () => {
                 update(perfil.idperfil,_perfil);
             }
             else {
-                console.log("ingreso crear");
+                
                 _perfil.idperfil = "";
                 _perfils.push(_perfil);
                 _perfil.modules=picklistTargetValue;
                 toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
-                console.log(_perfil);
+               
                 let data=crear(_perfil);
-                console.log(data);
-                console.log("ffffff");
+             
             }
             setPerfils(_perfils);
             setPerfilDialog(false);
@@ -141,7 +228,7 @@ const Denuncia = () => {
         setPicklistSourceValue(listModuleTemporal);
         PerfilService.getPermisosPerfil(idperfil).then(function(result) {
             let modules_unselect=listModuleTemporal.filter(function(modulo) {
-                console.log(modulo.idmodulo);
+                
                 let identificador_modulo='A';
                 result.data.map(function(modulo_select){
                     if(modulo.idmodulo==modulo_select.idmodulo){
@@ -153,7 +240,7 @@ const Denuncia = () => {
                 }
             });
             let modules_select=listModuleTemporal.filter(function(modulo) {
-                console.log(modulo.idmodulo);
+                
                 let identificador_modulo='A';
                 result.data.map(function(modulo_select){
                     if(modulo.idmodulo==modulo_select.idmodulo){
@@ -280,7 +367,6 @@ const Denuncia = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editPerfil(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeletePerfil(rowData)} />
             </div>
         );
@@ -332,71 +418,70 @@ const Denuncia = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '80%' }} header="Detalles de Denuncia" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '80%',height:'100%' }} header="Detalles de Denuncia" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
                     <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="descripcion">Modalidad</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
-                                {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
-                            </div>
-                            
+                                <Dropdown value={modality} onChange={(e) => onInputSelectModality(e.value,'idperfil')} optionLabel="descripcion"  autoFocus options={listModalities} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !complaint.idModalidad })}/>
+                                {submitted && !complaint.idModalidad && <small className="p-invalid">Modalidad es requerido.</small>}
+                         </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Tipo Denuncia</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Sección</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Libro</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                     </div>
                     <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="descripcion">Formalidad</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">Fecha Hecho</label>
-                                <Calendar inputId="calendar" value={value7} onChange={(e) => setValue7(e.value)}></Calendar>
+                                <InputText type="date"  id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">Hora Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <InputText type="time"  id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-5">
                                 <label htmlFor="descripcion">Lugar Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                     </div>
                     <div className="formgrid grid">
                             <div className="field col-5">
                                 <label htmlFor="descripcion">Dirección Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">&nbsp;</label>
-                                <Button label="mapa" icon="pi pi-search" className="p-button-warning mr-2 mb-2" />
+                                <Button label="mapa" icon="pi pi-search" className="p-button-info mr-2 mb-2" />
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">Latitud Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">Altitud Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             
@@ -408,35 +493,91 @@ const Denuncia = () => {
                             </div>
                     </div>
                     <div className="formgrid grid">
-                            <div className="field col-12">
-                            <label htmlFor="address">Denunciante</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                        <div className="field col-6">
+                            <label htmlFor="descripcion">Denunciante</label>
+                            <div className="p-inputgroup">
+                                <span className="p-float-label">
+                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                </span>
+                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
-                    </div>
-                    <div className="formgrid grid">
-                            <div className="field col-12">
+                        </div>
+                        <div className="field col-6">
                             <label htmlFor="address">Denunciado</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                            <div className="p-inputgroup">
+                                <span className="p-float-label">
+                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedDenunciado} onChange={(e) => setselectedDenunciado(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                </span>
+                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
+                        </div>
                     </div>
                     <div className="formgrid grid">
-                            <div className="field col-12">
+                        <div className="field col-6">
+                            <DataTable ref={dt} value={perfils} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
+                                dataKey="idperfil"  className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="No perfils found."  responsiveLayout="scroll">
+                                
+                                
+                            
+                                <Column field="descripcion" header="Denunciante" sortable body={descripcionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                               
+                                <Column body={actionBodyTemplate}></Column>
+                            </DataTable>
+                        </div>
+                        <div className="field col-6">
+                            <DataTable ref={dt} value={perfils} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
+                                dataKey="idperfil" className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="No perfils found."  responsiveLayout="scroll">
+                                
+                                <Column field="descripcion" header="Denunciado" sortable body={descripcionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                               
+                                <Column body={actionBodyTemplate}></Column>
+                            </DataTable>
+                        </div>
+                    </div>
+                    <div className="formgrid grid">
+                        <div className="field col-6">
                             <label htmlFor="address">Agraviado</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                            <div className="p-inputgroup">
+                                <span className="p-float-label">
+                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedAutoValue} onChange={(e) => setSelectedAutoValue(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                </span>
+                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
+                        </div>
                     </div>
                     <div className="formgrid grid">
                             <div className="field col-4">
-                            <label htmlFor="address">Arma</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <label htmlFor="address">Arma</label>
+                                <div className="p-inputgroup">
+                                    <span className="p-float-label">
+                                    <AutoComplete  placeholder="Buscar Arma" id="dd"   value={selectedArma} onChange={(e) => setselectedArma(e.value)} suggestions={autoFilteredArma} completeMethod={searchArma} field="full_name" />
+                                    </span>
+                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                </div>
                             </div>
                             <div className="field col-4">
-                            <label htmlFor="address">Especie</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <label htmlFor="address">Especie</label>
+                                <div className="p-inputgroup">
+                                    <span className="p-float-label">
+                                    <AutoComplete  placeholder="Buscar Especie" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                    </span>
+                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                </div>
                             </div>
                             <div className="field col-4">
-                            <label htmlFor="address">Vehiculo</label>
-                            <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required autoFocus className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
+                                <label htmlFor="address">Vehiculo</label>
+                                <div className="p-inputgroup">
+                                    <span className="p-float-label">
+                                    <AutoComplete  placeholder="Buscar Vehículo" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                    </span>
+                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                </div>
                             </div>
                     </div>
                        
@@ -447,7 +588,7 @@ const Denuncia = () => {
                     <Dialog visible={deletePerfilDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deletePerfilDialogFooter} onHide={hideDeletePerfilDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {perfil && <span>Estás seguro de que quieres eliminar el perfil <b>{perfil.descripcion}</b>?</span>}
+                            
                         </div>
                     </Dialog>
 

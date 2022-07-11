@@ -40,6 +40,24 @@ Persona.getPersona = async () => {
         });
     return res;
 };
+Persona.getPersonaSearch = async () => {
+    const urList = baseUrl + "/get_person_search";
+    const logueo=window.localStorage.getItem("logueo");
+    const user=JSON.parse(logueo);
+    const tokend=user.access_token;
+    const config = {
+        headers: { Authorization: `Bearer ${tokend}`}
+    };
+    const res = await axios
+        .get(urList,config)
+        .then((response) => {
+            return response.data;
+        })
+        .catch((error) => {
+            return error;
+        });
+    return res;
+};
 
 Persona.create = async (data) => {
     const urlvalida = baseUrl+"/personaC";

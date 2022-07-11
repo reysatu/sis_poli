@@ -13,6 +13,7 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ModalityController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/armaU/{id}', [ArmaController::class, 'update']);
     Route::delete('/armaD/{id}', [ArmaController::class, 'destroy']);
     Route::get('/getArma', [ArmaController::class, 'getArma']);
+    Route::get('/get_arma_search', [ArmaController::class, 'get_arma_search']);
 
     // Vehiculo
 
@@ -84,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // persona
-
+    Route::get('/get_person_search', [PersonaController::class, 'get_person_search']);
     Route::get('/persona', [PersonaController::class, 'index']);
     Route::post('/personaC', [PersonaController::class, 'store']);
     Route::put('/personaU/{id}', [PersonaController::class, 'update']);
@@ -98,8 +100,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reporteD/{id}', [ReporteController::class, 'destroy']);
     Route::get('/getReporte', [ReporteController::class, 'getReporte']);
 
-        // Module
+    // Module
     Route::get('/getModule', [ModuleController::class, 'getModule']);
+
+    // Modality
+    Route::get('/modality_list', [ModalityController::class, 'index']);
 
 
 });

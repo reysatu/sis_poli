@@ -102,10 +102,6 @@ const Home = () => {
         }
         fetchDataRol();
     },[])
-    console.log("jajajjaa");
-    console.log(listRol);
-    console.log("ajjajajaj");
-
     useEffect(() => {
         if (mobileMenuActive) {
             addClass(document.body, "body-overflow-hidden");
@@ -519,6 +515,7 @@ const Home = () => {
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/Denuncia" component={Denuncia} />
+                    <Route path="/Dashboard" component={TableDemo} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />
