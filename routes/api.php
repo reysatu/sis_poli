@@ -13,7 +13,13 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PdfController;
+
 use App\Http\Controllers\ModalityController;
+
+use App\Http\Controllers\LibroController;
+use App\Http\Controllers\SeccionController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -103,14 +109,52 @@ Route::middleware('auth:sanctum')->group(function () {
     // Module
     Route::get('/getModule', [ModuleController::class, 'getModule']);
 
+
     // Modality
     Route::get('/modality_list', [ModalityController::class, 'index']);
+
+
+    // libro
+
+    Route::get('/libro', [LibroController::class, 'index']);
+    Route::post('/libroC', [LibroController::class, 'store']);
+    Route::put('/libroU/{id}', [LibroController::class, 'update']);
+    Route::delete('/libroD/{id}', [LibroController::class, 'destroy']);
+    Route::get('/getLibro', [LibroController::class, 'getLibro']);
+
+    // Secciones
+
+    Route::get('/seccion', [SeccionController::class, 'index']);
+    Route::post('/seccionC', [SeccionController::class, 'store']);
+    Route::put('/seccionU/{id}', [SeccionController::class, 'update']);
+    Route::delete('/seccionD/{id}', [SeccionController::class, 'destroy']);
+    Route::get('/getSeccion', [SeccionController::class, 'getSeccion']);
 
 
 });
 
 Route::get("reporte-pdf", [PdfController::class, "indexPdf"]);
-Route::get("reporteComisaria-pdf", [PdfController::class, "indexComiPdf"]);
+Route::get("reporteComisaria-pdf", [ComisariaController::class, "indexComiPdf"]);
+
+
+Route::get("reportePerson-pdf", [PersonaController::class, "indexPersonPdf"]);
+
+
+Route::get("reporteEspecie-pdf", [EspecieController::class, "indexEspePdf"]);
+
+
+Route::get("reporteVehiculo-pdf", [VehiculoController::class, "indexVehiPdf"]);
+
+
+Route::get("reporteArma-pdf", [ArmaController::class, "indexArmaPdf"]);
+
+Route::get("reporteUsers-pdf", [UserController::class, "indexUserPdf"]);
+
+Route::get("reportePerfil-pdf", [PerfilController::class, "indexPerfilPdf"]);
+
+Route::get('/libroReporte-pdf', [LibroController::class, 'indexLibroPdf']);
+
+Route::get('/seccionReporte-pdf', [SeccionController::class, 'indexSeccionPdf']);
 
 
 

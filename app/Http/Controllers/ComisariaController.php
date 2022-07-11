@@ -31,14 +31,24 @@ class ComisariaController extends Controller
         }
         return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
-    // Reporte PDF
-    public function indexComiPdf()
-    {
 
-        $comisaria = DB::table( 'comisaria' )->get();
-        $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisaria]);
+    // Reporte PDF
+    public function indexComiPdf(Request $request)
+    {
+        $data=$request->all();
+        if (isset($data["search"])) {
+            $text_search=$data["search"];
+            $comisarias = DB::table( 'comisaria' )->where('nom_comisaria', 'like', '%'.$text_search.'%')->get();
+        }else{
+            $comisarias = DB::table( 'comisaria' )->get();
+        }
+        $pdf = PDF::loadView('comisariaReporte', ['comisarias' => $comisarias])->setPaper('a4', 'landscape');
         return $pdf->stream();
-    }
+    } 
+
+  
+
+    // ---------------------
     
 
     public function store(Request $request)

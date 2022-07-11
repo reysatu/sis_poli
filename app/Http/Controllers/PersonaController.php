@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Persona;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 
 class PersonaController extends Controller
 {
@@ -12,6 +14,20 @@ class PersonaController extends Controller
     {
         return response()->json(['status'=>'ok','data'=>Persona::all()], 200);
     }
+
+     // Reporte PDF
+     public function indexPersonPdf(Request $request)
+     {
+         $data=$request->all();
+         if (isset($data["search"])) {
+             $text_search=$data["search"];
+             $personas = DB::table( 'persona' )->where('dni', 'like', '%'.$text_search.'%')->get();
+         }else{
+             $personas = DB::table( 'persona' )->get();
+         }
+         $pdf = PDF::loadView('personReporte', ['personas' => $personas])->setPaper('a4', 'landscape');
+         return $pdf->stream();
+     } 
 
 
     public function store(Request $request)

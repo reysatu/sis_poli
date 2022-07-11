@@ -51,6 +51,15 @@ const Usuario = () => {
         celular: '122',
     };
 
+       // reportes
+       const getPdf = async () => {
+        const response =  await UsuarioService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
+    // fin reportes
+
     const listboxValues = [
         { name: 'Seleccionar', code: '' },
         { name: 'Administrador', code: '1' },
@@ -78,6 +87,7 @@ const Usuario = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [titleUsuario,setTitleUsuario]=useState('');
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -129,6 +139,7 @@ const Usuario = () => {
         setPerfil(false);
         setSubmitted(false);
         setUsuarioDialog(true);
+        setTitleUsuario('Nuevo Usuario');
       
     }
 
@@ -201,6 +212,7 @@ const Usuario = () => {
         setPerfil(arrayFilter[0]);
         setUsuario({ ...usuario });
         setUsuarioDialog(true);
+        setTitleUsuario('Editar Usuario');
     }
 
     const confirmDeleteUsuario = (usuario) => {
@@ -302,7 +314,7 @@ const Usuario = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }
@@ -484,7 +496,7 @@ const Usuario = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={usuarioDialog} style={{ width: '450px' }} header="Detalle de Usuario" modal className="p-fluid" footer={usuarioDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={usuarioDialog} style={{ width: '450px' }} header={titleUsuario} modal className="p-fluid" footer={usuarioDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="name">Perfil</label>
                             <Dropdown value={perfil} onChange={(e) => onInputSelect(e.value,'idperfil')} optionLabel="descripcion"  autoFocus options={listperfils} placeholder="Seleccionar"  required className={classNames({ 'p-invalid': submitted && !usuario.idperfil })}/>

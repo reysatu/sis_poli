@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\models\Arma;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 
 class ArmaController extends Controller
 {
@@ -43,6 +45,22 @@ class ArmaController extends Controller
         }
         return response()->json(['status'=>'ok','data'=>$data_arma], 200);
     }
+
+       // Reporte PDF
+       public function indexArmaPdf(Request $request)
+       {
+           $data=$request->all();
+           if (isset($data["search"])) {
+               $text_search=$data["search"];
+               $armas = DB::table( 'arma' )->where('arma', 'like', '%'.$text_search.'%')->get();
+           }else{
+               $armas = DB::table( 'arma' )->get();
+           }
+           $pdf = PDF::loadView('armaReporte', ['armas' => $armas])->setPaper('a4', 'landscape');
+           return $pdf->stream();
+       } 
+
+
     
     public function store(Request $request)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\models\ComiPdf;
+use App\Models\Reporte;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\PDF;
 // use Barryvdh\DomPDF\Facade as PDF;
@@ -12,18 +13,6 @@ use Barryvdh\DomPDF\Facade\PDF;
 
 class PdfController extends Controller
 {
-
-    // public function index(Request $request)
-    // {
-    //     $idreporte = $request->get('idreporte');
-    //     $descripcion = $request->get('descripcion');
-
-    //     $reportes = ComiPdf::ordenBy('id', 'DESC')
-    //     ->where();
-    // }
-
-
-   
 
     public function indexPdf(Request $request)
     {

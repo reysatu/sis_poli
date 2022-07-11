@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\models\Vehiculo;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\PDF;
 
 class VehiculoController extends Controller
 {
@@ -32,6 +34,19 @@ class VehiculoController extends Controller
         return response()->json(['status'=>'ok','data'=>$apu], 200);
     }
 
+      // Reporte PDF
+      public function indexVehiPdf(Request $request)
+      {
+          $data=$request->all();
+          if (isset($data["search"])) {
+              $text_search=$data["search"];
+              $vehiculos = DB::table( 'vehiculo' )->where('clase', 'like', '%'.$text_search.'%')->get();
+          }else{
+              $vehiculos = DB::table( 'vehiculo' )->get();
+          }
+          $pdf = PDF::loadView('vehiculoReporte', ['vehiculos' => $vehiculos])->setPaper('a4', 'landscape');
+          return $pdf->stream();
+      } 
     
     public function store(Request $request)
     {

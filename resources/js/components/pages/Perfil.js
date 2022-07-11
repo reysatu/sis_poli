@@ -17,7 +17,7 @@ import { InputText } from 'primereact/inputtext';
 import PerfilService from "../service/PerfilService";
 import ModuleService from "../service/ModuleService";
 
-const Perfil = () => {
+const Perfil = () => { 
     let emptyPerfil = {
         idperfil: null,
         descripcion: '',
@@ -28,6 +28,15 @@ const Perfil = () => {
     //     { idmodulo: '2', descripcion: 'LDN' },
        
     // ];
+
+     // reportes
+     const getPdf = async () => {
+        const response =  await PerfilService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
+
+    // fin reportes
 
     const [picklistSourceValue, setPicklistSourceValue] = useState([]);
     const [listModuleTemporal, setListModuleTemporal] = useState([]);
@@ -42,6 +51,7 @@ const Perfil = () => {
     const [listModules, setlistModules] = useState(null);
     const [checkboxValue, setCheckboxValue] = useState([]);
     const toast = useRef(null);
+    const [titlePerfil,setTitlePerfil]=useState('');
     const dt = useRef(null);
 
     
@@ -93,6 +103,7 @@ const Perfil = () => {
         setPicklistTargetValue([]);
         setSubmitted(false);
         setPerfilDialog(true);
+        setTitlePerfil('Nuevo Perfil');
     }
 
     const hideDialog = () => {
@@ -175,6 +186,7 @@ const Perfil = () => {
             setPicklistSourceValue(modules_unselect);
             setPicklistTargetValue(modules_select);
             setPerfilDialog(true);
+            setTitlePerfil('Editar Perfil')
           })
       
     }
@@ -234,7 +246,7 @@ const Perfil = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={getPdf} />
             </React.Fragment>
         )
     }
@@ -338,7 +350,7 @@ const Perfil = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '650px' }} header="Detalles de Perfil" modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={perfilDialog} style={{ width: '650px' }} header={titlePerfil} modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
                     <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="descripcion">Perfil</label>

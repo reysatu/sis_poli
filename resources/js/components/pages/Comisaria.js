@@ -41,12 +41,12 @@ const Comisaria = () => {
 
 
      // reportes
-    //  const getPdf = async () => {
-    //     const response =  await axios.get( `${baseUrl}/reporteComisaria-pdf` , {responseType: "blob"});
 
-    //     const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
-    //     window.open(url, "_blank");
-    // }
+     const getPdf = async () => {
+        const response =  await ComisariaService.getPdf(globalFilter);
+        const url = window.URL.createObjectURL(new Blob([response.data ], { type: "application/pdf" }));
+        window.open(url, "_blank");
+    }
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
@@ -69,12 +69,13 @@ const Comisaria = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);//BORRAR
     const [SelectedComisarias, setSelectedComisarias] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
+    // Filtro
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null); 
 
-     // Buscador
-     const [filterReport, setFilterReport] = useState();
+     
+   
 
     useEffect(() => {
         const productService = new ProductService();
@@ -299,7 +300,7 @@ const Comisaria = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" className="p-button-help" />
+                <Button label="Export" icon="pi pi-upload" className="p-button-help"onClick={getPdf} />
             </React.Fragment>
         )
     }
@@ -345,7 +346,7 @@ const Comisaria = () => {
             <h5 className="m-0">Administrar Comisarias</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search"  onChange={(e)=> setFilterReport(e.target.value)}  onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+                <InputText type="search"   onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
             </span> 
         </div>
     );
@@ -381,8 +382,8 @@ const Comisaria = () => {
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} comisarias"
-                        // Modificado para que se pueda filtrar por estado
-                        globalFilter={filterReport} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        // Modificado para que se pueda filtrar 
+                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                         <Column field="nom_comisaria" header="Comisaria" sortable body={nom_comisariaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
