@@ -296,11 +296,11 @@ const Crud = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+                    <DataTable  value={products} 
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                         <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>

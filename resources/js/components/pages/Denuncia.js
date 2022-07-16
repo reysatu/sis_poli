@@ -54,6 +54,12 @@ const Denuncia = () => {
     //     { idmodulo: '2', descripcion: 'LDN' },
        
     // ];
+    const typeComplaints = [
+        { description: 'Denuncia', id: '1' },
+        { description: 'Ocurrencia', id: '2' },
+    
+    ];
+    const [typeComplaint, setTypeComplaint] = useState(null);
     const [autoValue, setAutoValue] = useState(null);
     const [treeSelectNodes, setTreeSelectNodes] = useState(null);
     const [selectedDenunciante, setselectedDenunciante] = useState(null);
@@ -67,6 +73,8 @@ const Denuncia = () => {
     const [perfils, setPerfils] = useState(null);///lista de los perfiles
     const [perfilDialog, setPerfilDialog] = useState(false);//cabecera del modal
     const [deletePerfilDialog, setDeletePerfilDialog] = useState(false);
+    const [deleteDenuncianteDialog, setDeleteDenuncianteDialog] = useState(false);
+    
     const [perfil, setPerfil] = useState(emptyPerfil);//estado de los  campos del perfil
     const [selectedPerfils, setSelectedPerfils] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
@@ -104,13 +112,15 @@ const Denuncia = () => {
     const [autoFilteredArma, setAutoFilteredArma] = useState([]);
     const [autoArmaValue, setAutoArmaValue] = useState(null);
     const [titleDenuncia,setTitleDenuncia]=useState('');
+    //Denunciante
+    const [detailDenunciante, setDetailDenunciante] = useState(null);
+    const [denunciantes, setDenunciantes] = useState([]);
+    const [denunciante, setDenunciante] = useState([]);
 
     useEffect(() => {
         async function fetchDataModality() {
             const res = await ModalityService.list();
                 setListModalities(res.data)
-                console.log(res.data);
-                console.log("algo modality");
             } 
             fetchDataModality();  
     }, []);
@@ -119,8 +129,7 @@ const Denuncia = () => {
         async function fetchDataSection() {
             const res = await SeccionService.list();
             setListSecctios(res.data)
-                console.log(res.data);
-                console.log("algo sections");
+               
             } 
             fetchDataSection();  
     }, []);
@@ -128,8 +137,7 @@ const Denuncia = () => {
         async function fetchDataLibros() {
             const res = await LibroService.list();
             setListLibros(res.data)
-                console.log(res.data);
-                console.log("algo libros");
+               
             } 
             fetchDataLibros();  
     }, []);
@@ -272,6 +280,9 @@ const Denuncia = () => {
     const hideDeletePerfilDialog = () => {
         setDeletePerfilDialog(false);
     }
+    const hideDeleteDenuncianteDialog = () => {
+        setDeleteDenuncianteDialog(false);
+    }
 
     const onInputSelectModality = (val,name) => {
      
@@ -285,6 +296,13 @@ const Denuncia = () => {
      
         
     }
+    const onDenuncianteChange = (e) => {
+       
+        setselectedDenunciante(e.value)
+       
+      
+    };
+ 
  
 
     const savePerfil = () => {
@@ -363,11 +381,18 @@ const Denuncia = () => {
 
     
 
-    const confirmDeletePerfil = (perfil) => {
-        setPerfil(perfil);
+    const confirmDeletePerfil = (denunciante) => {
+        setDenunciante(perfil);
         setDeletePerfilDialog(true);
 
     }
+    const confirmDeleteDenunciante = (denunciante) => {
+        console.log(denunciante);
+        setDenunciante(denunciante);
+        setDeleteDenuncianteDialog(true);
+
+    }
+    
     
     const deletePerfil = () => {
         eliminar(perfil.idperfil);
@@ -376,6 +401,14 @@ const Denuncia = () => {
         setDeletePerfilDialog(false);
         setPerfil(emptyPerfil);
         toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Elimiminado', life: 3000 });
+    }
+    const deleteDenunciante = () => {
+        
+        let _denunciantes = denunciantes.filter(val => val.idpersona !== denunciante.idpersona);
+        setDenunciantes(_denunciantes);
+        setDeleteDenuncianteDialog(false);
+        setDenunciante([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Denunciante Elimiminado', life: 3000 });
     }
 
     const findIndexById = (id) => {
@@ -445,6 +478,38 @@ const Denuncia = () => {
         setPerfil(_perfil);
       
     };
+    const validarCampoUnico=(id,obj,key)=>{
+       
+        let flag=false;
+        Object.entries(obj).forEach(([item, value]) => {
+            let id_obj=value[key]
+            if(id_obj===id){
+                flag=true
+            }
+          });
+
+        return flag
+    }
+    const handleKeyUpDenunciante = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedDenunciante!=null && selectedDenunciante.idpersona){
+                let key='idpersona';
+                let campo_unico=validarCampoUnico(selectedDenunciante.idpersona,denunciantes,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la persona', life: 3000 });
+                }else{
+                    let _denunciantes = [...denunciantes];
+                    let _selectedDenunciante = { ...selectedDenunciante };
+                    _denunciantes.push(_selectedDenunciante);
+                    setDenunciantes(_denunciantes);
+                    setselectedDenunciante(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una persona', life: 3000 });
+            }
+            
+        }
+      };
     const descripcionBodyTemplate = (rowData) => {
         return (
             <>
@@ -471,6 +536,13 @@ const Denuncia = () => {
             </div>
         );
     }
+    const actionBodyDenunciante = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteDenunciante(rowData)} />
+            </div>
+        );
+    }
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -493,6 +565,12 @@ const Denuncia = () => {
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeletePerfilDialog} />
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deletePerfil} />
+        </>
+    );
+    const deleteDenuncianteDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDenuncianteDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteDenunciante} />
         </>
     );
  
@@ -527,7 +605,7 @@ const Denuncia = () => {
                          </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Tipo Denuncia</label>
-                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
+                                <Dropdown value={typeComplaint} onChange={(e) => onInputSelectModality(e.value)} options={typeComplaints} optionLabel="description" placeholder="Seleccionar" />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-3 ">
@@ -597,7 +675,7 @@ const Denuncia = () => {
                             <label htmlFor="descripcion">Denunciante</label>
                             <div className="p-inputgroup">
                                 <span className="p-float-label">
-                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedDenunciante} onChange={(e) => setselectedDenunciante(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                <AutoComplete    onKeyUp={handleKeyUpDenunciante} placeholder="Buscar Persona" id="dd"   value={selectedDenunciante} onChange={onDenuncianteChange}  suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
                                 </span>
                                 <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
@@ -614,17 +692,13 @@ const Denuncia = () => {
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-6">
-                            <DataTable ref={dt} value={perfils} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
-                                dataKey="idperfil"  className="datatable-responsive"
+                            <DataTable value={denunciantes} 
+                                dataKey="idDenunciante"  className="datatable-responsive"
                                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                 currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
-                                globalFilter={globalFilter} emptyMessage="No perfils found."  responsiveLayout="scroll">
-                                
-                                
-                            
-                                <Column field="descripcion" header="Denunciante" sortable body={descripcionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                               
-                                <Column body={actionBodyTemplate}></Column>
+                                globalFilter={globalFilter} emptyMessage="Denunciantes vacio."  responsiveLayout="scroll">
+                                <Column field="full_name" header="Denunciante" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
+                                <Column body={actionBodyDenunciante}></Column>
                             </DataTable>
                         </div>
                         <div className="field col-6">
@@ -634,7 +708,7 @@ const Denuncia = () => {
                                 currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
                                 globalFilter={globalFilter} emptyMessage="No perfils found."  responsiveLayout="scroll">
                                 
-                                <Column field="descripcion" header="Denunciado" sortable body={descripcionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                                <Column field="descripcion" header="Denunciado" headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                                
                                 <Column body={actionBodyTemplate}></Column>
                             </DataTable>
@@ -689,6 +763,13 @@ const Denuncia = () => {
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteDenuncianteDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteDenuncianteDialogFooter} onHide={hideDeleteDenuncianteDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>Estás seguro de que quieres eliminar el Denunciante?</span>
                         </div>
                     </Dialog>
 

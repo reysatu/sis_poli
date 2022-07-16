@@ -49,8 +49,8 @@ const Arma = () => {
 
     const [checkboxValue, setCheckboxValue] = useState([]);
 
-    const [products, setProducts] = useState(null);//borrar
-    const [armas, setArmas] = useState(null);///lista de los perfiles
+    const [products, setProducts] = useState(null);//borra
+    const [armas, setArmas] = useState(null);
     
     const [armaDialog, setArmaDialog] = useState(false);//cabecera del modal
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
@@ -124,6 +124,8 @@ const Arma = () => {
         
          if (arma.marca.trim()) {
             let _armas = [...armas];
+            console.log(_armas);
+            console.log("arms");
             let _arma = { ...arma };
             if (arma.idarma) {
               
