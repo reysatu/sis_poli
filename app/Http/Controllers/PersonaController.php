@@ -51,12 +51,12 @@ class PersonaController extends Controller
 
     public function get_person_search()
     {
-        $query_person=Persona::all(['idpersona','nombre','ap_paterno','ap_materno']);
+        $query_person=Persona::all(['dni','idpersona','nombre','ap_paterno','ap_materno']);
         $data_person = [];
         foreach ($query_person as $item) { 
             $data_person[] = [
                 'idpersona'=>$item->idpersona,
-                'full_name' => $item->nombre.' '.$item->ap_paterno.' '.$item->ap_materno,
+                'full_name' =>$item->dni.' '.$item->nombre.' '.$item->ap_paterno.' '.$item->ap_materno,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_person], 200);

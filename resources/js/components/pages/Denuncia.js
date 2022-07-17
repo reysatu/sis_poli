@@ -49,39 +49,35 @@ const Denuncia = () => {
         altitudHecho: '',
         descripcion: '',
     };
-    // const listValue = [
-    //     { idmodulo: '1', descripcion: 'SF' },
-    //     { idmodulo: '2', descripcion: 'LDN' },
-       
-    // ];
+    
     const typeComplaints = [
         { description: 'Denuncia', id: '1' },
         { description: 'Ocurrencia', id: '2' },
     
     ];
-    const [typeComplaint, setTypeComplaint] = useState(null);
-    const [autoValue, setAutoValue] = useState(null);
-    const [treeSelectNodes, setTreeSelectNodes] = useState(null);
+    const formalitys = [
+        { description: 'Verbal', id: '1' },
+        { description: 'Escrita', id: '2' },
+    
+    ];
+    
+
+    
+   
     const [selectedDenunciante, setselectedDenunciante] = useState(null);
     
     const [selectedAutoValue, setSelectedAutoValue] = useState(null);
-    const [autoFilteredValue, setAutoFilteredValue] = useState([]);
+
    
-    const [picklistSourceValue, setPicklistSourceValue] = useState([]);
-    const [listModuleTemporal, setListModuleTemporal] = useState([]);
-    const [picklistTargetValue, setPicklistTargetValue] = useState([]);
-    const [perfils, setPerfils] = useState(null);///lista de los perfiles
-    const [perfilDialog, setPerfilDialog] = useState(false);//cabecera del modal
-    const [deletePerfilDialog, setDeletePerfilDialog] = useState(false);
+    
     const [deleteDenuncianteDialog, setDeleteDenuncianteDialog] = useState(false);
     
     const [perfil, setPerfil] = useState(emptyPerfil);//estado de los  campos del perfil
     const [selectedPerfils, setSelectedPerfils] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
-    const [listModules, setlistModules] = useState(null);
-    const [checkboxValue, setCheckboxValue] = useState([]);
-    const [value7, setValue7] = useState('');
+
+    
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -89,15 +85,23 @@ const Denuncia = () => {
     const [autoFilteredPerson, setAutoFilteredPerson] = useState([]);
     const [autoPersonValue, setAutoPersonValue] = useState(null);
     const [complaint, setComplaint] = useState(empty_complaint);
-    const [modality, setModality] = useState(null);
+    
     const [listModalities, setListModalities] = useState(null);
 
-
+    //modalidad
+    const [modality, setModality] = useState(null);
+    //tipo denuncia
+    const [typeComplaint, setTypeComplaint] = useState(null);
+    //formalidad
+    const [formality, setFormality] = useState(null);
+    // libro
     const [libro, setLibro] = useState(null);
     const [listLibros, setListLibros] = useState(null);
-   
+   // secction
     const [secction, setSecttion] = useState(null);
     const [listSecctios, setListSecctios] = useState(null);
+    //Denuncia modal
+    const [complaintDialog, setComplaintDialog]= useState(null);
    
     // Vehiculo
     const [selectedVehiculo, setselectedVehiculo] = useState(null);
@@ -116,7 +120,7 @@ const Denuncia = () => {
     const [detailDenunciante, setDetailDenunciante] = useState(null);
     const [denunciantes, setDenunciantes] = useState([]);
     const [denunciante, setDenunciante] = useState([]);
-
+    //modalidad
     useEffect(() => {
         async function fetchDataModality() {
             const res = await ModalityService.list();
@@ -124,7 +128,7 @@ const Denuncia = () => {
             } 
             fetchDataModality();  
     }, []);
-
+    //seccion
     useEffect(() => {
         async function fetchDataSection() {
             const res = await SeccionService.list();
@@ -133,6 +137,7 @@ const Denuncia = () => {
             } 
             fetchDataSection();  
     }, []);
+     // libro
     useEffect(() => {
         async function fetchDataLibros() {
             const res = await LibroService.list();
@@ -141,19 +146,7 @@ const Denuncia = () => {
             } 
             fetchDataLibros();  
     }, []);
-
-
     
-
-    useEffect(() => {
-        async function fetchDataModules() {
-            const res = await ModuleService.getModule();
-            setPicklistSourceValue(res.data);
-            setListModuleTemporal(res.data);
-            } 
-            fetchDataModules();  
-    }, []);
-
     // Vehiculo
     useEffect(() => {
         async function fetchDataVehiculo() {
@@ -189,15 +182,6 @@ const Denuncia = () => {
             fetchDataPersonas();  
     }, []);
 
-    useEffect(() => {
-        const countryService = new CountryService();
-        const nodeService = new NodeService();
-        countryService.getCountries().then(data => setAutoValue(data));
-       
-        // nodeService.getTreeNodes().then(data => setTreeSelectNodes(data));
-    }, []);
-    
-    
     const searchPerson = (event) => {
         setTimeout(() => {
             if (!event.query.trim().length) {
@@ -250,142 +234,58 @@ const Denuncia = () => {
         }, 250);
     };
 
-    const crear = async (data) => {
-        const res = await PerfilService.create(data);
-    }
-
-    const update = async (id,data)=> {
-        const res = await PerfilService.update(id,data);
-    }
-    const eliminar = async (id)=> {
-        const res = await PerfilService.eliminar(id);
-    }
-  
-    const openNew = () => {
-        setPerfil(emptyPerfil);
-        var estate_perfil='A';
-        setCheckboxValue([estate_perfil]);
-        setPicklistSourceValue(listModuleTemporal);
-        setPicklistTargetValue([]);
-        setSubmitted(false);
-        setPerfilDialog(true);
-        setTitleDenuncia('Nueva Denuncia');
-    }
-
-    const hideDialog = () => {
-        setSubmitted(false);
-        setPerfilDialog(false);
-    }
-
-    const hideDeletePerfilDialog = () => {
-        setDeletePerfilDialog(false);
-    }
+   
     const hideDeleteDenuncianteDialog = () => {
         setDeleteDenuncianteDialog(false);
     }
 
     const onInputSelectModality = (val,name) => {
-     
-        
+        setModality(val)
+    }
+    const onInputSelecTypeComplaint = (val,name) => {
+        setTypeComplaint(val)
     }
     const onInputSelectSecction = (val,name) => {
-     
+        setSecttion(val)
         
     }
     const onInputSelectLibro = (val,name) => {
-     
+        setLibro(val)
         
     }
+    const onInputSelectFormality = (val,name) => {
+        setFormality(val)
+    }
+    
     const onDenuncianteChange = (e) => {
-       
         setselectedDenunciante(e.value)
-       
-      
     };
+    // Denuncia modal
+    const openNew = () => {
+        setComplaintDialog(true);
+        setTitleDenuncia('Nueva Denuncia');
+    }
+
+    const hideComplaintDialog = () => {
+        setComplaintDialog(false);
+    }
+    const complaintDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideComplaintDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text"  />
+        </>
+    );
  
  
 
-    const savePerfil = () => {
-        setSubmitted(true);
     
-         if (perfil.descripcion.trim()) {
-            let _perfils = [...perfils];
-            let _perfil = { ...perfil };
-            if (perfil.idperfil) {
-               
-                const index = findIndexById(perfil.idperfil);
-                _perfils[index] = _perfil;
-                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil modificado', life: 3000 });
-                _perfil.modules=picklistTargetValue;
-                update(perfil.idperfil,_perfil);
-            }
-            else {
-                
-                _perfil.idperfil = "";
-                _perfils.push(_perfil);
-                _perfil.modules=picklistTargetValue;
-                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
-               
-                let data=crear(_perfil);
-             
-            }
-            setPerfils(_perfils);
-            setPerfilDialog(false);
-            setPerfil(emptyPerfil);
-        }
-    }
    
-    const editPerfil = (perfil) => {
-        setPerfil({ ...perfil });
-        let _perfil = { ...perfil};
-        var estate_perfil=_perfil["estado"];
-        setCheckboxValue([estate_perfil]);
-        let idperfil=perfil.idperfil;
-        setPicklistSourceValue(listModuleTemporal);
-        PerfilService.getPermisosPerfil(idperfil).then(function(result) {
-            let modules_unselect=listModuleTemporal.filter(function(modulo) {
-                
-                let identificador_modulo='A';
-                result.data.map(function(modulo_select){
-                    if(modulo.idmodulo==modulo_select.idmodulo){
-                        identificador_modulo='B';
-                    }
-                });
-                if(identificador_modulo=='A'){
-                    return modulo
-                }
-            });
-            let modules_select=listModuleTemporal.filter(function(modulo) {
-                
-                let identificador_modulo='A';
-                result.data.map(function(modulo_select){
-                    if(modulo.idmodulo==modulo_select.idmodulo){
-                        identificador_modulo='B';
-                    }
-                });
-                if(identificador_modulo=='B'){
-                    return modulo
-                }
-           
-             });
-            
-            setPicklistSourceValue(modules_unselect);
-            setPicklistTargetValue(modules_select);
-            setPerfilDialog(true);
-
-            setTitleDenuncia('Ampliar Denuncia')
-          })
-      
-    }
+    
 
 
     
 
-    const confirmDeletePerfil = (denunciante) => {
-        setDenunciante(perfil);
-        setDeletePerfilDialog(true);
-
-    }
+   
     const confirmDeleteDenunciante = (denunciante) => {
         console.log(denunciante);
         setDenunciante(denunciante);
@@ -394,14 +294,7 @@ const Denuncia = () => {
     }
     
     
-    const deletePerfil = () => {
-        eliminar(perfil.idperfil);
-        let _perfils = perfils.filter(val => val.idperfil !== perfil.idperfil);
-        setPerfils(_perfils);
-        setDeletePerfilDialog(false);
-        setPerfil(emptyPerfil);
-        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Elimiminado', life: 3000 });
-    }
+    
     const deleteDenunciante = () => {
         
         let _denunciantes = denunciantes.filter(val => val.idpersona !== denunciante.idpersona);
@@ -411,29 +304,11 @@ const Denuncia = () => {
         toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Denunciante Elimiminado', life: 3000 });
     }
 
-    const findIndexById = (id) => {
-        let index = -1;
-        for (let i = 0; i < perfils.length; i++) {
-            if (perfils[i].idperfil === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
+    
     const exportCSV = () => {
         dt.current.exportCSV();
     }
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-      
-        let _perfil = { ...perfil};
-        
-        _perfil[`${name}`] = val;
-       
-        setPerfil(_perfil);
-    }
+    
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
@@ -453,31 +328,8 @@ const Denuncia = () => {
         )
     }
 
-    const codigoBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">idperfil</span>
-                {rowData.idperfil}
-            </>
-        );
-    }
-    const onCheckboxChange = (e) => {
-        setCheckboxValue([]);
-        let selectedValue = [...checkboxValue];
-        if (e.checked)
-            selectedValue.push(e.value);
-        else
-            selectedValue.splice(selectedValue.indexOf(e.value), 1);
-        setCheckboxValue(selectedValue);
-        let state_perfil='I';
-        if (e.checked){
-            state_perfil='A';
-        }
-        let _perfil = { ...perfil };
-        _perfil["estado"] =state_perfil ;
-        setPerfil(_perfil);
-      
-    };
+    
+  
     const validarCampoUnico=(id,obj,key)=>{
        
         let flag=false;
@@ -490,6 +342,7 @@ const Denuncia = () => {
 
         return flag
     }
+    
     const handleKeyUpDenunciante = (e) => {
         if (e.key === 'Enter') {
             if(selectedDenunciante!=null && selectedDenunciante.idpersona){
@@ -555,18 +408,8 @@ const Denuncia = () => {
     );
 
   
-    const perfilDialogFooter = (
-        <>
-            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={savePerfil} />
-        </>
-    );
-    const deletePerfilDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeletePerfilDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deletePerfil} />
-        </>
-    );
+    
+    
     const deleteDenuncianteDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDenuncianteDialog} />
@@ -582,7 +425,7 @@ const Denuncia = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={perfils} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
+                    <DataTable ref={dt}  selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
                         dataKey="idperfil" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
@@ -596,7 +439,8 @@ const Denuncia = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={perfilDialog} style={{ width: '80%',height:'100%' }} header={titleDenuncia} modal className="p-fluid" footer={perfilDialogFooter} onHide={hideDialog}>
+                    {/* Modal denunciante */}
+                    <Dialog visible={complaintDialog} style={{ width: '80%',height:'100%' }} header={titleDenuncia} modal className="p-fluid" footer={complaintDialogFooter} onHide={hideComplaintDialog}>
                     <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="descripcion">Modalidad</label>
@@ -605,7 +449,7 @@ const Denuncia = () => {
                          </div>
                             <div className="field col-3 ">
                                 <label htmlFor="descripcion">Tipo Denuncia</label>
-                                <Dropdown value={typeComplaint} onChange={(e) => onInputSelectModality(e.value)} options={typeComplaints} optionLabel="description" placeholder="Seleccionar" />
+                                <Dropdown value={typeComplaint} onChange={(e) => onInputSelecTypeComplaint(e.value)} options={typeComplaints} optionLabel="description" placeholder="Seleccionar" />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             <div className="field col-3 ">
@@ -622,7 +466,7 @@ const Denuncia = () => {
                     <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="descripcion">Formalidad</label>
-                                <Dropdown  optionLabel="descripcion"  autoFocus  placeholder="Seleccionar"  />
+                                <Dropdown  optionLabel="description" value={formality}  onChange={(e) => onInputSelectFormality(e.value, 'idperfil') }  placeholder="Seleccionar"  options={formalitys}  />
                                 {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
                             </div>
                             
@@ -702,7 +546,7 @@ const Denuncia = () => {
                             </DataTable>
                         </div>
                         <div className="field col-6">
-                            <DataTable ref={dt} value={perfils} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
+                            <DataTable ref={dt} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
                                 dataKey="idperfil" className="datatable-responsive"
                                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                 currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
@@ -755,15 +599,6 @@ const Denuncia = () => {
                             </div>
                     </div>
                        
-                    </Dialog>
-
-                   
-
-                    <Dialog visible={deletePerfilDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deletePerfilDialogFooter} onHide={hideDeletePerfilDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            
-                        </div>
                     </Dialog>
 
                     <Dialog visible={deleteDenuncianteDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteDenuncianteDialogFooter} onHide={hideDeleteDenuncianteDialog}>
