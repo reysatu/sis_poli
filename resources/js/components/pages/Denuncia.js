@@ -50,6 +50,19 @@ const Denuncia = () => {
         descripcion: '',
     };
     
+    let emptyPersona = {
+        idpersona: null,
+        dni: '',
+        nombre: '',
+        ap_paterno: '',
+        ap_materno: '',
+        nacimiento: '',
+        edad: '',
+        sexo: '',
+        celular: '',
+        estado_civil: '',
+        situacion: '',
+    };
     const typeComplaints = [
         { description: 'Denuncia', id: '1' },
         { description: 'Ocurrencia', id: '2' },
@@ -65,12 +78,18 @@ const Denuncia = () => {
     
    
     const [selectedDenunciante, setselectedDenunciante] = useState(null);
+    // agraviado
+    const [selectedAgraviado, setselectedAgraviado] = useState(null);
+
+    
     
     const [selectedAutoValue, setSelectedAutoValue] = useState(null);
 
    
     
     const [deleteDenuncianteDialog, setDeleteDenuncianteDialog] = useState(false);
+    const [deleteDenunciadoDialog, setDeleteDenunciadoDialog] = useState(false);
+    const [deleteAgraviadoDialog, setDeleteAgraviadoDialog] = useState(false);
     
     const [perfil, setPerfil] = useState(emptyPerfil);//estado de los  campos del perfil
     const [selectedPerfils, setSelectedPerfils] = useState(null);// AUN NO SE
@@ -80,8 +99,10 @@ const Denuncia = () => {
     
     const toast = useRef(null);
     const dt = useRef(null);
-
+     // Denunciado
     const [selectedDenunciado, setselectedDenunciado] = useState(null);
+   
+
     const [autoFilteredPerson, setAutoFilteredPerson] = useState([]);
     const [autoPersonValue, setAutoPersonValue] = useState(null);
     const [complaint, setComplaint] = useState(empty_complaint);
@@ -120,6 +141,23 @@ const Denuncia = () => {
     const [detailDenunciante, setDetailDenunciante] = useState(null);
     const [denunciantes, setDenunciantes] = useState([]);
     const [denunciante, setDenunciante] = useState([]);
+
+    // Denunciado
+    const [detailDenuncido, setDetailDenunciado] = useState(null);
+    const [denunciados, setDenunciados] = useState([]);
+    const [denunciado, setDenunciado] = useState([]);
+
+    // Agraviado
+    const [detailAgraviado, setDetailAgraviado] = useState(null);
+    const [agraviados, setAgraviados] = useState([]);
+    const [agraviado, setAgraviado] = useState([]);
+
+    // Persona
+    const [persona, setPersona] = useState(emptyPersona);
+    const [personas, setPersonas] = useState(null);
+    const [personaDialog, setPersonaDialog] = useState(false);
+    const [titlePersona,setTitlePersona]=useState('');
+
     //modalidad
     useEffect(() => {
         async function fetchDataModality() {
@@ -128,6 +166,26 @@ const Denuncia = () => {
             } 
             fetchDataModality();  
     }, []);
+    // Persona
+    useEffect(() => {
+        async function fetchDataPersona() {
+            const res = await PersonaService.list();
+            setPersonas(res.data)
+            } 
+            fetchDataPersona();  
+    }, [persona]);
+
+    const crear = async (data) => {
+       
+        const res = await PersonaService.create(data);
+    
+    }
+
+    const update = async (id,data)=> {
+       
+        const res = await PersonaService.update(id,data);
+    
+    }
     //seccion
     useEffect(() => {
         async function fetchDataSection() {
@@ -182,6 +240,8 @@ const Denuncia = () => {
             fetchDataPersonas();  
     }, []);
 
+   
+
     const searchPerson = (event) => {
         setTimeout(() => {
             if (!event.query.trim().length) {
@@ -207,6 +267,43 @@ const Denuncia = () => {
             }
         }, 250);
     };
+
+    // Nueva Persona
+    const findIndexById = (id) => {
+        let index = -1;
+        for (let i = 0; i < personas.length; i++) {
+            if (personas[i].idpersona === id) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    const savePersona = () => {
+        setSubmitted(true);
+        if (persona.nombre.trim()) {
+            let _personas = [...personas];
+            let _persona = { ...persona };
+            if (persona.idpersona) {
+                const index = findIndexById(persona.idpersona);
+                _personas[index] = _persona;
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Modificado', life: 3000 });
+                update(persona.idpersona,_persona);
+
+            }
+            else {
+                _persona.idpersona = "";
+                _personas.push(_persona);
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Usuario Creado', life: 3000 });
+                crear(_persona);
+            }
+            setPersonas(_personas);
+                setPersonaDialog(false);
+                setPersona(emptyPersona);
+        }
+    }
 
     const searchEspecie = (event) => {
         setTimeout(() => {
@@ -234,9 +331,20 @@ const Denuncia = () => {
         }, 250);
     };
 
+    const hideDialog = () => {
+        setSubmitted(false);
+        setPersonaDialog(false);
+    }
    
     const hideDeleteDenuncianteDialog = () => {
         setDeleteDenuncianteDialog(false);
+    }
+
+    const hideDeleteDenunciadoDialog = () => {
+        setDeleteDenunciadoDialog(false);
+    }
+    const hideDeleteAgraviadoDialog = () => {
+        setDeleteAgraviadoDialog(false);
     }
 
     const onInputSelectModality = (val,name) => {
@@ -256,15 +364,33 @@ const Denuncia = () => {
     const onInputSelectFormality = (val,name) => {
         setFormality(val)
     }
-    
+    // Denunciante
     const onDenuncianteChange = (e) => {
         setselectedDenunciante(e.value)
+    };
+    // Denunciado
+    const onDenunciadoChange = (e) => {
+        setselectedDenunciado(e.value)
+    };
+    // Agraviado
+    const onAgraviadoChange = (e) => {
+        setselectedAgraviado(e.value)
     };
     // Denuncia modal
     const openNew = () => {
         setComplaintDialog(true);
         setTitleDenuncia('Nueva Denuncia');
     }
+
+     // Modal Nueva Persona
+    const openNewPerson = () => {
+        setPersona(emptyPersona);
+        setSubmitted(false);
+        setPersonaDialog(true);
+        setTitlePersona('Nueva Persona');
+    }
+
+   
 
     const hideComplaintDialog = () => {
         setComplaintDialog(false);
@@ -275,28 +401,37 @@ const Denuncia = () => {
             <Button label="Guardar" icon="pi pi-check" className="p-button-text"  />
         </>
     );
+
+    const personaDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={savePersona} />
+        </>
+    );
  
  
-
-    
-   
-    
-
-
-    
-
-   
     const confirmDeleteDenunciante = (denunciante) => {
         console.log(denunciante);
         setDenunciante(denunciante);
         setDeleteDenuncianteDialog(true);
 
     }
+    const confirmDeleteDenunciado = (denunciado) => {
+        console.log(denunciado);
+        setDenunciado(denunciado);
+        setDeleteDenunciadoDialog(true);
+
+    }
+    const confirmDeleteAgraviado = (agraviado) => {
+        console.log(agraviado);
+        setAgraviado(agraviado);
+        setDeleteAgraviadoDialog(true);
+
+    }
     
     
     
     const deleteDenunciante = () => {
-        
         let _denunciantes = denunciantes.filter(val => val.idpersona !== denunciante.idpersona);
         setDenunciantes(_denunciantes);
         setDeleteDenuncianteDialog(false);
@@ -304,10 +439,35 @@ const Denuncia = () => {
         toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Denunciante Elimiminado', life: 3000 });
     }
 
+    const deleteDenunciado = () => {
+        let _denunciados = denunciados.filter(val => val.idpersona !== denunciado.idpersona);
+        setDenunciados(_denunciados);
+        setDeleteDenunciadoDialog(false);
+        setDenunciado([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Denunciado Elimiminado', life: 3000 });
+    }
+    const deleteAgraviado = () => {
+        let _agraviados = agraviados.filter(val => val.idpersona !== agraviado.idpersona);
+        setAgraviados(_agraviados);
+        setDeleteAgraviadoDialog(false);
+        setAgraviado([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Agraviado Elimiminado', life: 3000 });
+    }
+
     
     const exportCSV = () => {
         dt.current.exportCSV();
     }
+
+    // Persona Input
+    const onInputChangePerson = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _persona = { ...persona};
+        _persona[`${name}`] = val;
+
+        setPersona(_persona);
+    }
+
     
     const leftToolbarTemplate = () => {
         return (
@@ -343,6 +503,7 @@ const Denuncia = () => {
         return flag
     }
     
+    
     const handleKeyUpDenunciante = (e) => {
         if (e.key === 'Enter') {
             if(selectedDenunciante!=null && selectedDenunciante.idpersona){
@@ -363,6 +524,53 @@ const Denuncia = () => {
             
         }
       };
+
+    // Denunciado
+    const handleKeyUpdenounced = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedDenunciado!=null && selectedDenunciado.idpersona){
+                let key='idpersona';
+                let campo_unico=validarCampoUnico(selectedDenunciado.idpersona,denunciados,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la persona', life: 3000 });
+                }else{
+                    let _denunciados = [...denunciados ];
+                    let _selectedDenunciado = { ...selectedDenunciado };
+                    _denunciados.push(_selectedDenunciado);
+                    setDenunciados(_denunciados);
+                    setselectedDenunciado(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una persona', life: 3000 });
+            }
+        }
+      };
+
+    //   Agraviado
+
+    const   handleKeyUpAgraviado = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedAgraviado!=null && selectedAgraviado.idpersona){
+                let key='idpersona';
+                let campo_unico=validarCampoUnico(selectedAgraviado.idpersona,agraviados,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la persona', life: 3000 });
+                }else{
+                    let _agraviados = [...agraviados];
+                    let _selectedAgraviado = { ...selectedAgraviado };
+                    _agraviados.push(_selectedAgraviado);
+                    setAgraviados(_agraviados);
+                    setselectedAgraviado(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una persona', life: 3000 });
+            }
+            
+        }
+      };
+
+
+
     const descripcionBodyTemplate = (rowData) => {
         return (
             <>
@@ -396,6 +604,20 @@ const Denuncia = () => {
             </div>
         );
     }
+    const actionBodyDenunciado = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteDenunciado(rowData)} />
+            </div>
+        );
+    }
+    const actionBodyAgraviado = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteAgraviado(rowData)} />
+            </div>
+        );
+    }
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -409,11 +631,22 @@ const Denuncia = () => {
 
   
     
-    
     const deleteDenuncianteDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDenuncianteDialog} />
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteDenunciante} />
+        </>
+    );
+    const deleteDenunciadoDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteDenunciadoDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteDenunciado} />
+        </>
+    );
+    const deleteAgraviadoDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteAgraviadoDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteAgraviado} />
         </>
     );
  
@@ -521,16 +754,16 @@ const Denuncia = () => {
                                 <span className="p-float-label">
                                 <AutoComplete    onKeyUp={handleKeyUpDenunciante} placeholder="Buscar Persona" id="dd"   value={selectedDenunciante} onChange={onDenuncianteChange}  suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
                                 </span>
-                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                <Button onClick={openNewPerson} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
                         </div>
                         <div className="field col-6">
                             <label htmlFor="address">Denunciado</label>
                             <div className="p-inputgroup">
                                 <span className="p-float-label">
-                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedDenunciado} onChange={(e) => setselectedDenunciado(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                <AutoComplete  onKeyUp={handleKeyUpdenounced}  placeholder="Buscar Persona" id="dd"   value={selectedDenunciado} onChange={onDenunciadoChange} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
                                 </span>
-                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                <Button onClick={openNewPerson} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
                         </div>
                     </div>
@@ -546,15 +779,15 @@ const Denuncia = () => {
                             </DataTable>
                         </div>
                         <div className="field col-6">
-                            <DataTable ref={dt} selection={selectedPerfils} onSelectionChange={(e) => setSelectedPerfils(e.value)}
-                                dataKey="idperfil" className="datatable-responsive"
+                            <DataTable ref={dt} value={denunciados}
+                                dataKey="idDenunciado" className="datatable-responsive"
                                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                 currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
-                                globalFilter={globalFilter} emptyMessage="No perfils found."  responsiveLayout="scroll">
+                                globalFilter={globalFilter} emptyMessage="Denunciados vacio."  responsiveLayout="scroll">
                                 
-                                <Column field="descripcion" header="Denunciado" headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                                <Column field="full_name" header="Denunciado" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
                                
-                                <Column body={actionBodyTemplate}></Column>
+                                <Column body={actionBodyDenunciado}></Column>
                             </DataTable>
                         </div>
                     </div>
@@ -563,12 +796,26 @@ const Denuncia = () => {
                             <label htmlFor="address">Agraviado</label>
                             <div className="p-inputgroup">
                                 <span className="p-float-label">
-                                <AutoComplete  placeholder="Buscar Persona" id="dd"   value={selectedAutoValue} onChange={(e) => setSelectedAutoValue(e.value)} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
+                                <AutoComplete   onKeyUp={handleKeyUpAgraviado} placeholder="Buscar Persona" id="dd"   value={selectedAgraviado} onChange={onAgraviadoChange} suggestions={autoFilteredPerson} completeMethod={searchPerson} field="full_name" />
                                 </span>
-                                <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                <Button  onClick={openNewPerson} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                             </div>
                         </div>
                     </div>
+                    <div className="formgrid grid">
+                        <div className="field col-6">
+                            <DataTable ref={dt} value={agraviados}
+                                dataKey="idAgraviado" className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="Agraviados vacio."  responsiveLayout="scroll">
+                                
+                                <Column field="full_name" header="Agraviados" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
+                               
+                                <Column body={actionBodyAgraviado}></Column>
+                            </DataTable>
+                            </div>
+                        </div>
                     <div className="formgrid grid">
                             <div className="field col-4">
                                 <label htmlFor="address">Arma</label>
@@ -598,13 +845,81 @@ const Denuncia = () => {
                                 </div>
                             </div>
                     </div>
-                       
+                    </Dialog>
+                    {/* Persona Modal */}
+                    <Dialog visible={personaDialog} style={{ width: '450px' }} header={titlePersona} modal className="p-fluid" footer={personaDialogFooter} onHide={hideDialog}>
+
+                        <div className="field">
+                            <label htmlFor="dni">DNI</label>
+                            <InputText id="dni" value={persona.dni} onChange={(e) => onInputChangePerson(e, 'dni')} required  className={classNames({ 'p-invalid': submitted && !persona.dni })} />
+                            {submitted && !persona.dni && <small className="p-invalid">Dni es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="nombre">Nombre</label>
+                            <InputText id="nombre" value={persona.nombre} onChange={(e) => onInputChangePerson(e, 'nombre')} required  className={classNames({ 'p-invalid': submitted && !persona.nombre })}/>
+                            {submitted && !persona.nombre && <small className="p-invalid">Nombre es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="ap_paterno">AP. Paterno</label>
+                            <InputText id="ap_paterno" value={persona.ap_paterno} onChange={(e) => onInputChangePerson(e, 'ap_paterno')} required  className={classNames({ 'p-invalid': submitted && !persona.ap_paterno })}/>
+                            {submitted && !persona.ap_paterno && <small className="p-invalid">Apellido Paterno es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="ap_materno">AP. Materno</label>
+                            <InputText id="ap_materno" value={persona.ap_materno} onChange={(e) => onInputChangePerson(e, 'ap_materno')} required  className={classNames({ 'p-invalid': submitted && !persona.ap_materno })}/>
+                            {submitted && !persona.ap_materno && <small className="p-invalid">Usuario es requerido.</small>}
+                        </div>
+                        {/* <div className="field">
+                            <label htmlFor="nacimiento">Fech.Nacimiento</label>
+                           
+                            <div className="field">
+                                <InputMask id="nacimiento" mask="dd/mm/aaaa" value={persona.nacimiento} onChange={(e) => setPersona(personas)} className="p-invalid"/>
+                            </div>
+                            {submitted && !persona.nacimiento && <small className="p-invalid">Usuario es requerido.</small>}
+                        </div> */}
+                        <div className="field">
+                            <label htmlFor="edad">Edad</label>
+                            <InputText id="edad" value={persona.edad} onChange={(e) => onInputChangePerson(e, 'edad')} required  className={classNames({ 'p-invalid': submitted && !persona.edad })}/>
+                            {submitted && !persona.edad && <small className="p-invalid">edad es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="sexo">Sexo</label>
+                            <InputText id="sexo" value={persona.sexo} onChange={(e) => onInputChangePerson(e, 'sexo')} required  className={classNames({ 'p-invalid': submitted && !persona.sexo })}/>
+                            {submitted && !persona.sexo && <small className="p-invalid">sexo es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="celular">Celular</label>
+                            <InputText id="celular" value={persona.celular} onChange={(e) => onInputChangePerson(e, 'celular')} required  className={classNames({ 'p-invalid': submitted && !persona.celular })}/>
+                            {submitted && !persona.celular && <small className="p-invalid">celular es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="estado_civil">Estado Civil</label>
+                            <InputText id="estado_civil" value={persona.estado_civil} onChange={(e) => onInputChangePerson(e, 'estado_civil')} required  className={classNames({ 'p-invalid': submitted && !persona.sexo })}/>
+                            {submitted && !persona.estado_civil && <small className="p-invalid">estado_civil es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="situacion">Situacion</label>
+                            <InputText id="situacion" value={persona.situacion} onChange={(e) => onInputChangePerson(e, 'situacion')} required  className={classNames({ 'p-invalid': submitted && !persona.situacion })}/>
+                            {submitted && !persona.situacion && <small className="p-invalid">situacion es requerido.</small>}
+                        </div>
                     </Dialog>
 
                     <Dialog visible={deleteDenuncianteDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteDenuncianteDialogFooter} onHide={hideDeleteDenuncianteDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                             <span>Estás seguro de que quieres eliminar el Denunciante?</span>
+                             <span>¿Estás seguro de que quieres eliminar el Denunciante?</span>
+                        </div>
+                    </Dialog>
+                    <Dialog visible={deleteDenunciadoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteDenunciadoDialogFooter} onHide={hideDeleteDenunciadoDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>¿Estás seguro de que quieres eliminar al Denunciado?</span>
+                        </div>
+                    </Dialog>
+                    <Dialog visible={deleteAgraviadoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteAgraviadoDialogFooter} onHide={hideDeleteAgraviadoDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>¿Estás seguro de que quieres eliminar al Agraviado?</span>
                         </div>
                     </Dialog>
 
