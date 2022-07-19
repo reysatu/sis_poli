@@ -12,7 +12,7 @@ class EspecieController extends Controller
 
     public function index()
     {
-        $data_especie=Especie::all(['idespecie', 'especie','situacion', 'documento', 'estado']);
+        $data_especie=Especie::all(['idespecie', 'especie', 'documento','codigoDoc','situacion','estado']);
         $apu = [];
         foreach ($data_especie as $item) { 
             $status_description='ACTIVO';
@@ -22,8 +22,9 @@ class EspecieController extends Controller
             $apu[] = [
                 'idespecie' => $item->idespecie,
                 'especie' => $item->especie,
-                'situacion' => $item->situacion,
                 'documento' => $item->documento,
+                'codigoDoc' => $item->codigoDoc,
+                'situacion' => $item->situacion,
                 'estado' => $item->estado,
                 'status_description'=> $status_description,
             ];
@@ -34,12 +35,12 @@ class EspecieController extends Controller
 
     public function get_especie_search()
     {
-        $query_especie=Especie::all(['idespecie','especie','situacion','documento']);
+        $query_especie=Especie::all(['idespecie','especie','documento', 'codigoDoc','situacion']);
         $data_especie = [];
         foreach ($query_especie as $item) { 
             $data_especie[] = [
                 'idespecie'=>$item->idespecie,
-                'full_name' => $item->especie.' '.$item->situacion.' '.$item->documento,
+                'full_name' =>$item->codigoDoc.''.$item->especie.' '.$item->situacion.' '.$item->documento,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_especie], 200);
@@ -65,7 +66,7 @@ class EspecieController extends Controller
     }
     public function getEspecie()
     {
-        return response()->json(['status'=>'ok','data'=>Especie::all(['idespecie', 'especie','situacion', 'documento', 'estado'])], 200);
+        return response()->json(['status'=>'ok','data'=>Especie::all(['idespecie', 'especie','documento','codigoDoc','situacion', 'estado'])], 200);
     }
 
     public function update(Request $request, $id)

@@ -49,9 +49,10 @@
             <tr>
                 <th>id</th>
                 <th>Clase</th>
-                <th>Situación</th>
                 <th>Marca</th>
                 <th>Modelo</th>
+                <th>Placa</th>
+                <th>Situación</th>
                 <th>Estado</th>
             </tr>
 
@@ -59,9 +60,10 @@
                 <tr>
                     <td>{{ $vehiculo->idvehiculo }}</td>
                     <td>{{$vehiculo->clase}}</td>
-                    <td>{{$vehiculo->situacion}}</td>
                     <td>{{$vehiculo->marca}}</td>
                     <td>{{$vehiculo->modelo}}</td>
+                    <td>{{$vehiculo->placa}}</td>
+                    <td>{{$vehiculo->situacion}}</td>
                     <td>{{$vehiculo->estado}}</td>
                 </tr>
             @endforeach

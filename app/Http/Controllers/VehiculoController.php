@@ -13,7 +13,7 @@ class VehiculoController extends Controller
     public function index()
     {
 
-        $data_vehiculo=Vehiculo::all(['idvehiculo','clase','situacion', 'marca','modelo', 'estado']);
+        $data_vehiculo=Vehiculo::all(['idvehiculo','clase','situacion', 'marca','modelo','placa', 'estado']);
         $apu = [];
         foreach ($data_vehiculo as $item) { 
             $status_description='ACTIVO';
@@ -26,6 +26,7 @@ class VehiculoController extends Controller
                 'situacion' => $item->situacion,
                 'marca' => $item->marca,
                 'modelo' => $item->modelo,
+                'placa' => $item->placa,
                 'estado' => $item->estado,
                 'status_description'=> $status_description,
             ];
@@ -36,12 +37,12 @@ class VehiculoController extends Controller
 
     public function get_vehiculo_search()
     {
-        $query_vehiculo=Vehiculo::all(['idvehiculo','clase','marca','modelo']);
+        $query_vehiculo=Vehiculo::all(['idvehiculo','clase','marca','modelo','placa','situacion']);
         $data_vehiculo = [];
         foreach ($query_vehiculo as $item) { 
             $data_vehiculo[] = [
                 'idvehiculo'=>$item->idvehiculo,
-                'full_name' => $item->clase.' '.$item->marca.' '.$item->modelo,
+                'full_name' =>$item->placa.'' .$item->clase.' '.$item->marca.' '.$item->modelo.''.$item->situacion,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_vehiculo], 200);
@@ -68,7 +69,7 @@ class VehiculoController extends Controller
 
     public function getPerfil()
     {
-        return response()->json(['status'=>'ok','data'=>Vehiculo::all(['idvehiculo','clase','situacion', 'marca','modelo', 'estado'])], 200);
+        return response()->json(['status'=>'ok','data'=>Vehiculo::all(['idvehiculo','clase', 'marca','modelo','placa','situacion', 'estado'])], 200);
     }
 
     public function update(Request $request, $id)

@@ -18,5 +18,5 @@ class Especie extends Model
 
     // public $incrementing = false;
 
-    protected $fillable = ['idespecie', 'especie','situacion', 'documento', 'estado'];
+    protected $fillable = ['idespecie', 'especie', 'documento','codigoDoc', 'situacion','estado'];
 }

@@ -51,6 +51,7 @@
                 <th>Marcas</th>
                 <th>Modelos</th>
                 <th>Calibre</th>
+                <th>Serie</th>
                 <th>Estado</th>
             </tr>
 
@@ -60,6 +61,7 @@
                     <td>{{$arma->marca}}</td>
                     <td>{{$arma->modelo}}</td>
                     <td>{{$arma->calibre}}</td>
+                    <td>{{$arma->serie}}</td>
                     <td>{{$arma->estado}}</td>
                 </tr>
             @endforeach

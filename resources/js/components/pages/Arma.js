@@ -34,6 +34,7 @@ const Arma = () => {
         marca: '',
         modelo:'',
         calibre:'',
+        serie:'',
         estado: 'A',
     };
 
@@ -314,6 +315,16 @@ const calibreBodyTemplate = (rowData) => {
         </>
     );
 }
+const serieBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Serie</span>
+            {rowData.serie}
+        </>
+    );
+}
+
+
 const estadoBodyTemplate = (rowData) => {
     return (
         <>
@@ -389,6 +400,7 @@ const estadoBodyTemplate = (rowData) => {
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="calibre" header="Calibre" sortable body={calibreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="serie" header="Serie" sortable body={serieBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
@@ -413,6 +425,11 @@ const estadoBodyTemplate = (rowData) => {
                             <label htmlFor="calibre">Calibre</label>
                             <InputText id="calibre" value={arma.calibre} onChange={(e) => onInputChange(e, 'calibre')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.calibre })} />
                             {submitted && !arma.calibre && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="serie">Serie</label>
+                            <InputText id="serie" value={arma.serie} onChange={(e) => onInputChange(e, 'serie')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.serie })} />
+                            {submitted && !arma.serie && <small className="p-invalid">Serie es requerido.</small>}
                         </div>
                         <label htmlFor="estado">Estado</label>
                         <div className="col-12 md:col-4">

@@ -49,8 +49,9 @@
             <tr>
                 <th>id</th>
                 <th>Especie</th>
-                <th>Situación</th>
                 <th>Documento</th>
+                <th>Codigo Documento</th>
+                <th>Situación</th>
                 <th>Estado</th>
             </tr>
 
@@ -58,8 +59,9 @@
                 <tr>
                     <td>{{ $especie->idespecie }}</td>
                     <td>{{$especie->especie}}</td>
-                    <td>{{$especie->situacion}}</td>
                     <td>{{$especie->documento}}</td>
+                    <td>{{$especie->codigoDoc}}</td>
+                    <td>{{$especie->situacion}}</td>
                     <td>{{$especie->estado}}</td>
                 </tr>
             @endforeach

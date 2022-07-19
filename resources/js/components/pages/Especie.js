@@ -32,8 +32,9 @@ const Especie = () => {
     let emptyEspecie = {
         idespecie: null,
         especie: '',
-        situacion: '',
         documento: '',
+        codigoDoc:'',
+        situacion: '',
         estado: 'A',
        
     };
@@ -270,19 +271,29 @@ const Especie = () => {
             </>
         );
     }
-    const situacionBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Situación</span>
-                {rowData.situacion}
-            </>
-        );
-    }
+    
     const documentBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Tipo documento</span>
                 {rowData.documento}
+            </>
+        );
+    }
+    const codigoDocBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Codigo documento</span>
+                {rowData.codigoDoc}
+            </>
+        );
+    }
+
+    const situacionBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Situación</span>
+                {rowData.situacion}
             </>
         );
     }
@@ -353,10 +364,9 @@ const Especie = () => {
                      
                         <Column field="especie" header="Especies" sortable body={especieBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
-                        <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
                         <Column field="documento" header="Tipo documento" sortable body={documentBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
+                        <Column field="codigoDoc" header="Codigo documento" sortable body={codigoDocBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
                         <Column body={actionBodyTemplate}></Column>
@@ -370,15 +380,19 @@ const Especie = () => {
                         </div>
 
                         <div className="field">
+                            <label htmlFor="documento">Tipo de documento</label>
+                            <InputText id="documento" value={especie.documento} onChange={(e) => onInputChange(e, 'documento')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.documento})} />
+                            {submitted && !especie.documento && <small className="p-invalid">Tipo de documento es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="codigoDoc">Codigo documento</label>
+                            <InputText id="codigoDoc" value={especie.codigoDoc} onChange={(e) => onInputChange(e, 'codigoDoc')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.codigoDoc})} />
+                            {submitted && !especie.codigoDoc && <small className="p-invalid">Codigo Documento es requerido.</small>}
+                        </div>
+                        <div className="field">
                             <label htmlFor="situacion">Situación</label>
                             <InputText id="situacion" value={especie.situacion} onChange={(e) => onInputChange(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.situacion})} />
                             {submitted && !especie.situacion && <small className="p-invalid">Especie es requerido.</small>}
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="documento">Tipo de documento</label>
-                            <InputText id="documento" value={especie.documento} onChange={(e) => onInputChange(e, 'documento')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.documento})} />
-                            {submitted && !especie.documento && <small className="p-invalid">Especie es requerido.</small>}
                         </div>
 
                         <div className="col-12 md:col-4">
@@ -394,7 +408,7 @@ const Especie = () => {
                     <Dialog visible={deleteEspecieDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteEspecieDialogFooter} onHide={hideDeleteEspecieDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {especie && <span>Estás seguro de que quieres eliminar el perfil<b>{especie.especie}</b>?</span>}
+                            {especie && <span>¿Estás seguro de que quieres eliminar el perfil<b>{especie.especie}</b>?</span>}
                         </div>
                     </Dialog>
 

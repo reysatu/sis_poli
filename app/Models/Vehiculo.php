@@ -18,5 +18,5 @@ class Vehiculo extends Model
 
     // public $incrementing = false;
 
-    protected $fillable = ['idvehiculo','clase','situacion', 'marca','modelo', 'estado'];
+    protected $fillable = ['idvehiculo','clase','marca','modelo','placa','situacion','estado'];
 }

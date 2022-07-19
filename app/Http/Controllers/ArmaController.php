@@ -13,7 +13,7 @@ class ArmaController extends Controller
    
     public function index() 
     {
-        $data_arma=Arma::all(['idarma', 'marca', 'modelo', 'calibre', 'estado']);
+        $data_arma=Arma::all(['idarma', 'marca', 'modelo', 'calibre','serie', 'estado']);
         $apu = [];
         foreach ($data_arma as $item) { 
             $status_description='ACTIVO';
@@ -25,6 +25,7 @@ class ArmaController extends Controller
                 'marca' => $item->marca,
                 'modelo' => $item->modelo,  
                 'calibre' => $item->calibre,
+                'serie' => $item->serie,
                 'estado' => $item->estado,
                 'status_description'=> $status_description,
             ];
@@ -35,12 +36,12 @@ class ArmaController extends Controller
 
     public function get_arma_search()
     {
-        $query_arma=Arma::all(['idarma','marca','modelo','calibre']);
+        $query_arma=Arma::all(['idarma','marca','modelo','calibre','serie']);
         $data_arma = [];
         foreach ($query_arma as $item) { 
             $data_arma[] = [
                 'idarma'=>$item->idarma,
-                'full_name' => $item->marca.' '.$item->modelo.' '.$item->calibre,
+                'full_name' =>$item->serie.''. $item->marca.' '.$item->modelo.' '.$item->calibre,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_arma], 200);
@@ -69,7 +70,7 @@ class ArmaController extends Controller
 
     public function getArma()
     {
-        return response()->json(['status'=>'ok','data'=>Arma::all(['idarma', 'marca', 'modelo', 'calibre', 'estado'])], 200);
+        return response()->json(['status'=>'ok','data'=>Arma::all(['idarma', 'marca', 'modelo', 'calibre','serie', 'estado'])], 200);
     }
 
 

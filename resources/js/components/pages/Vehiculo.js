@@ -32,9 +32,10 @@ const Vehiculo = () => {
     let emptyVehiculo = {
         idvehiculo: null,
         clase: '',
-        situacion: '',
         marca: '',
         modelo:'',
+        placa:'',
+        situacion: '',
         estado: 'A',
     };
 
@@ -278,15 +279,6 @@ const claseBodyTemplate = (rowData) => {
     );
 }
 
-const situacionBodyTemplate = (rowData) => {
-    return (
-        <>
-            <span className="p-column-title">Situación</span>
-            {rowData.situacion}
-        </>
-    );
-}
-
 const marcaBodyTemplate = (rowData) => {
     return (
         <>
@@ -303,6 +295,23 @@ const modeloBodyTemplate = (rowData) => {
         </>
     );
 }
+const placaBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Placa</span>
+            {rowData.placa}
+        </>
+    );
+}
+const situacionBodyTemplate = (rowData) => {
+    return (
+        <>
+            <span className="p-column-title">Situación</span>
+            {rowData.situacion}
+        </>
+    );
+}
+
 
 const estadoBodyTemplate = (rowData) => {
     return (
@@ -375,13 +384,11 @@ const estadoBodyTemplate = (rowData) => {
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
                      
                         <Column field="clase" header="Clase Vehiculo" sortable body={claseBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                       
-                        <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
                         <Column field="marca" header="Marca" sortable body={marcaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
 
                         <Column field="modelo" header="Modelo" sortable body={modeloBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-
+                        <Column field="placa" header="Placa" sortable body={placaBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="situacion" header="Situacion" sortable body={situacionBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="status_description" header="Estado" sortable body={estadoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}>
                         </Column>
                         <Column body={actionBodyTemplate}></Column>
@@ -394,24 +401,26 @@ const estadoBodyTemplate = (rowData) => {
                             <InputText id="clase" value={vehiculo.clase} onChange={(e) => onInputChange(e, 'clase')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase })} />
                             {submitted && !vehiculo.clase && <small className="p-invalid">vehiculo es requerido.</small>}
                         </div>
-
-                        <div className="field">
-                            <label htmlFor="situacion">Situación</label>
-                            <InputText id="situacion" value={vehiculo.situacion} onChange={(e) => onInputChange(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.situacion })} />
-                            {submitted && !vehiculo.situacion && <small className="p-invalid">vehiculo es requerido.</small>}
-                        </div>
-
                         <div className="field">
                             <label htmlFor="marca">Marca</label>
                             <InputText id="marca" value={vehiculo.marca} onChange={(e) => onInputChange(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.marca })} />
-                            {submitted && !vehiculo.marca && <small className="p-invalid">vehiculo es requerido.</small>}
+                            {submitted && !vehiculo.marca && <small className="p-invalid">marca es requerido.</small>}
                         </div>
                         <div className="field">
                             <label htmlFor="modelo">Modelo</label>
                             <InputText id="modelo" value={vehiculo.modelo} onChange={(e) => onInputChange(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.modelo })} />
                             {submitted && !vehiculo.modelo && <small className="p-invalid">Modelo es requerido.</small>}
                         </div>
-
+                        <div className="field">
+                            <label htmlFor="placa">Placa</label>
+                            <InputText id="placa" value={vehiculo.placa} onChange={(e) => onInputChange(e, 'placa')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.placa })} />
+                            {submitted && !vehiculo.placa && <small className="p-invalid">Placa es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="situacion">Situación</label>
+                            <InputText id="situacion" value={vehiculo.situacion} onChange={(e) => onInputChange(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.situacion })} />
+                            {submitted && !vehiculo.situacion && <small className="p-invalid">vehiculo es requerido.</small>}
+                        </div>
                         <div className="col-12 md:col-4">
                             <div className="field-checkbox">
                            
@@ -426,7 +435,7 @@ const estadoBodyTemplate = (rowData) => {
                     <Dialog visible={deleteVehiculoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteVehiculoDialogFooter} onHide={hideDeleteVehiculoDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {vehiculo && <span>Estás seguro de que quieres eliminar el vehiculo<b>{vehiculo.clase}</b>?</span>}
+                            {vehiculo && <span>¿Estás seguro de que quieres eliminar el vehiculo<b>{vehiculo.clase}</b>?</span>}
                         </div>
                     </Dialog>
 
