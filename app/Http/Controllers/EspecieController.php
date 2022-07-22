@@ -40,7 +40,7 @@ class EspecieController extends Controller
         foreach ($query_especie as $item) { 
             $data_especie[] = [
                 'idespecie'=>$item->idespecie,
-                'full_name' =>$item->codigoDoc.''.$item->especie.' '.$item->situacion.' '.$item->documento,
+                'full_name' =>$item->codigoDoc.'-'.$item->especie.' - '.$item->situacion.' - '.$item->documento,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_especie], 200);
