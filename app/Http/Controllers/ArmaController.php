@@ -41,7 +41,7 @@ class ArmaController extends Controller
         foreach ($query_arma as $item) { 
             $data_arma[] = [
                 'idarma'=>$item->idarma,
-                'full_name' =>$item->serie.''. $item->marca.' '.$item->modelo.' '.$item->calibre,
+                'full_name' =>$item->serie.'-'. $item->marca.' - '.$item->modelo.' - '.$item->calibre,
             ];
         }
         return response()->json(['status'=>'ok','data'=>$data_arma], 200);

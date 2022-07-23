@@ -63,6 +63,36 @@ const Denuncia = () => {
         estado_civil: '',
         situacion: '',
     };
+
+    let emptyArma = {
+        idarma: null,
+        marca: '',
+        modelo:'',
+        calibre:'',
+        serie:'',
+        estado: 'A',
+    };
+
+    let emptyEspecie = {
+        idespecie: null,
+        especie: '',
+        documento: '',
+        codigoDoc:'',
+        situacion: '',
+        estado: 'A',
+    };
+
+    let emptyVehiculo = {
+        idvehiculo: null,
+        clase: '',
+        marca: '',
+        modelo:'',
+        placa:'',
+        situacion: '',
+        estado: 'A',
+    };
+
+
     const typeComplaints = [
         { description: 'Denuncia', id: '1' },
         { description: 'Ocurrencia', id: '2' },
@@ -90,11 +120,16 @@ const Denuncia = () => {
     const [deleteDenuncianteDialog, setDeleteDenuncianteDialog] = useState(false);
     const [deleteDenunciadoDialog, setDeleteDenunciadoDialog] = useState(false);
     const [deleteAgraviadoDialog, setDeleteAgraviadoDialog] = useState(false);
+    const [deleteArmaDialog, setDeleteArmaDialog] = useState(false);
+    const [deleteEspecieDialog, setDeleteEspecieDialog] = useState(false);
+    const [deleteVehiculoDialog, setDeleteVehiculoDialog] = useState(false);
     
     const [perfil, setPerfil] = useState(emptyPerfil);//estado de los  campos del perfil
     const [selectedPerfils, setSelectedPerfils] = useState(null);// AUN NO SE
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+
+     const [checkboxValue, setCheckboxValue] = useState([]);
 
     
     const toast = useRef(null);
@@ -132,7 +167,7 @@ const Denuncia = () => {
     const [selectedEspecie, setselectedEspecie] = useState(null);
     const [autoFilteredEspecie, setAutoFilteredEspecie] = useState([]);
     const [autoEspecieValue, setAutoEspecieValue] = useState(null);
-    // Arma
+    // Arma  
     const [selectedArma, setselectedArma] = useState(null);
     const [autoFilteredArma, setAutoFilteredArma] = useState([]);
     const [autoArmaValue, setAutoArmaValue] = useState(null);
@@ -152,6 +187,26 @@ const Denuncia = () => {
     const [agraviados, setAgraviados] = useState([]);
     const [agraviado, setAgraviado] = useState([]);
 
+    // Armas tabla
+    const [detailArma, setDetailArma] = useState(null);
+    const [armas, setArmas] = useState([]);
+    const [arma, setArma] = useState(emptyArma);
+    const [armaDialog, setArmaDialog] = useState(false);
+    const [titleArma,setTitleArma]=useState('');
+
+    // Especies tabla
+    const [detailEspecie, setDetailEspecie] = useState(null);
+    const [especies, setEspecies] = useState([]);
+    const [especie, setEspecie] = useState(emptyEspecie);
+    const [especieDialog, setEspecieDialog] = useState(false);
+    const [titleEspecie,setTitleEspecie]=useState('');
+
+    // Vehiculo tabla
+    const [detailVehiculo, setDetailVehiculo] = useState(null);
+    const [vehiculos, setVehiculos] = useState([]);
+    const [vehiculo, setVehiculo] = useState(emptyArma);
+    const [vehiculoDialog, setVehiculoDialog] = useState(false);
+    const [titleVehiculo,setTitleVehiculo]=useState('');
     // Persona
     const [persona, setPersona] = useState(emptyPersona);
     const [personas, setPersonas] = useState(null);
@@ -175,17 +230,57 @@ const Denuncia = () => {
             fetchDataPersona();  
     }, [persona]);
 
+
+    // Persona
     const crear = async (data) => {
        
         const res = await PersonaService.create(data);
     
     }
-
     const update = async (id,data)=> {
        
         const res = await PersonaService.update(id,data);
     
     }
+    // Armas
+
+    const crearArma = async (data) => {
+       
+        const res = await ArmaService.create(data);
+    
+    } 
+    const updateArma = async (id,data)=> {
+       
+        const res = await ArmaService.update(id,data);
+    
+    }
+
+    // Especies
+
+    const crearEspecie = async (data) => {
+       
+        const res = await EspecieService.create(data);
+    
+    } 
+    const updateEspecie = async (id,data)=> {
+       
+        const res = await EspecieService.update(id,data);
+    
+    }
+
+    // Vehiculos
+    const crearVehiculo = async (data) => {
+       
+        const res = await VehiculoService.create(data);
+    
+    } 
+    const updateVehiculo = async (id,data)=> {
+       
+        const res = await VehiculoService.update(id,data);
+    
+    }
+
+
     //seccion
     useEffect(() => {
         async function fetchDataSection() {
@@ -305,6 +400,86 @@ const Denuncia = () => {
         }
     }
 
+    const saveArma = () => {
+        setSubmitted(true);
+        
+         if (arma.marca.trim()) {
+            let _armas = [...armas];
+            console.log(_armas);
+            console.log("armas");
+            let _arma = { ...arma };
+            if (arma.idarma) {
+              
+                // const index = findIndexById(arma.idarma);
+                // _armas[index] = _arma;
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma modificado', life: 3000 });
+                console.log(arma.id,"arma actual ");
+                updateArma(arma.idarma,_arma);
+            }
+            else {
+                _arma.idarma = "";
+                // _armas.push(_arma);
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma Creado', life: 3000 });
+                crearArma(_arma);
+            }
+            setArmas(_armas);
+            setArmaDialog(false);
+            setArma(emptyArma);
+        }
+    }
+
+    const saveEspecie = () => {
+        setSubmitted(true);
+        
+         if (especie.especie.trim()) {
+            let _especies = [...especies];
+            let _especie = { ...especie};
+            if (especie.idespecie) {
+              
+                // const index = findIndexById(especie.idespecie);
+                // _especies[index] = _especie;
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Especie modificado', life: 3000 });
+                console.log(especie.id,"Especie actual ");
+                updateEspecie(especie.idespecie,_especie);
+            }
+            else {
+                _especie.idespecie = "";
+                // _especies.push(_especie);
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Perfil Creado', life: 3000 });
+                crearEspecie(_especie);
+            }
+            setEspecies(_especies);
+            setEspecieDialog(false);
+            setEspecie(emptyEspecie);
+        }
+    }
+
+    const saveVehiculo = () => {
+        setSubmitted(true);
+
+        if (vehiculo.clase.trim()) {
+            let _vehiculos = [...vehiculos];
+            let _vehiculo = { ...vehiculo };
+            if (vehiculo.idvehiculo) { 
+                console.log("ingreso vehi");
+                // const index = findIndexById(vehiculo.idvehiculo);
+                // _vehiculos[index] = _vehiculo;
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo modificado', life: 3000 });
+                console.log(vehiculo.id,"vehiculo actual ");
+                updateVehiculo(vehiculo.idvehiculo,_vehiculo);
+            }
+            else {
+                 _vehiculo.idvehiculo = "";
+                // _vehiculos.push(_vehiculo);
+                toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo Creado', life: 3000 });
+                crearVehiculo(_vehiculo);
+            }
+            setVehiculos(_vehiculos);
+            setVehiculoDialog(false);
+            setVehiculo(emptyVehiculo);
+        }
+    }
+
     const searchEspecie = (event) => {
         setTimeout(() => {
             if (!event.query.trim().length) {
@@ -334,6 +509,9 @@ const Denuncia = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setPersonaDialog(false);
+        setArmaDialog(false);
+        setEspecieDialog(false);
+        setVehiculoDialog(false);
     }
    
     const hideDeleteDenuncianteDialog = () => {
@@ -345,6 +523,15 @@ const Denuncia = () => {
     }
     const hideDeleteAgraviadoDialog = () => {
         setDeleteAgraviadoDialog(false);
+    }
+    const hideDeleteArmaDialog = () => {
+        setDeleteArmaDialog(false);
+    }
+    const hideDeleteEspecieDialog = () => {
+        setDeleteEspecieDialog(false);
+    }
+    const hideDeleteVehiculoDialog = () => {
+        setDeleteVehiculoDialog(false);
     }
 
     const onInputSelectModality = (val,name) => {
@@ -376,6 +563,19 @@ const Denuncia = () => {
     const onAgraviadoChange = (e) => {
         setselectedAgraviado(e.value)
     };
+    // Arma 
+    const onArmaChange = (e) => {
+        setselectedArma(e.value)
+    };
+    // Especie
+    const onEspecieChange = (e) => {
+        setselectedEspecie(e.value)
+    };
+    // Vehiculo
+    const onVehiculoChange = (e) => {
+        setselectedVehiculo(e.value)
+    };
+
     // Denuncia modal
     const openNew = () => {
         setComplaintDialog(true);
@@ -390,7 +590,34 @@ const Denuncia = () => {
         setTitlePersona('Nueva Persona');
     }
 
+    // Nuevo Arma
+    const openNewArma = () => {
+        setArma(emptyArma);
+        setSubmitted(false);
+        setArmaDialog(true);
+        var estate_arma='A';
+        setCheckboxValue([estate_arma]);
+        setTitleArma('Nueva Arma');
+    }
+
+    // Nueva Especie
    
+    const openNewEspecie = () => {
+        setEspecie(emptyEspecie);
+        setSubmitted(false);
+        setEspecieDialog(true);
+        var estate_especie='A';
+        setCheckboxValue([estate_especie]);
+        setTitleEspecie('Nueva especie');
+    }
+    const openNewVehiculo = () => {
+        setVehiculo(emptyVehiculo);
+        setSubmitted(false);
+        setVehiculoDialog(true);
+        var estate_vehiculo='A';
+        setCheckboxValue([estate_vehiculo]);
+        setTitleVehiculo('Nuevo Vehiculo');
+    }
 
     const hideComplaintDialog = () => {
         setComplaintDialog(false);
@@ -406,6 +633,24 @@ const Denuncia = () => {
         <>
             <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={savePersona} />
+        </>
+    );
+    const armaDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveArma} />
+        </>
+    );
+    const especieDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveEspecie} />
+        </>
+    );
+    const vehiculoDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveVehiculo} />
         </>
     );
  
@@ -426,6 +671,24 @@ const Denuncia = () => {
         console.log(agraviado);
         setAgraviado(agraviado);
         setDeleteAgraviadoDialog(true);
+
+    }
+    const confirmDeleteArma = (arma) => {
+        console.log(arma);
+        setArma(arma);
+        setDeleteArmaDialog(true);
+
+    }
+    const confirmDeleteEspecie = (especie) => {
+        console.log(especie);
+        setEspecie(especie);
+        setDeleteEspecieDialog(true);
+
+    }
+    const confirmDeleteVehiculo = (vehiculo) => {
+        console.log(vehiculo);
+        setVehiculo(vehiculo);
+        setDeleteVehiculoDialog(true);
 
     }
     
@@ -454,7 +717,27 @@ const Denuncia = () => {
         toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Agraviado Elimiminado', life: 3000 });
     }
 
-    
+    const deleteArma = () => {
+        let _armas = armas.filter(val => val.idpersona !== arma.idpersona);
+        setArmas(_armas);
+        setDeleteArmaDialog(false);
+        setArma([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Arma Elimiminado', life: 3000 });
+    }
+    const deleteEspecie = () => {
+        let _especies = especies.filter(val => val.idespecie !== especie.idespecie);
+        setEspecies(_especies);
+        setDeleteEspecieDialog(false);
+        setEspecie([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Especie Elimiminado', life: 3000 });
+    }
+    const deleteVehiculo = () => {
+        let _vehiculos = vehiculos.filter(val => val.idvehiculo !== vehiculo.idvehiculo);
+        setVehiculos(_vehiculos);
+        setDeleteVehiculoDialog(false);
+        setVehiculo([]);
+        toast.current.show({ severity: 'success', summary: 'Exitoso', detail: 'Vehiculo Elimiminado', life: 3000 });
+    }
     const exportCSV = () => {
         dt.current.exportCSV();
     }
@@ -467,6 +750,106 @@ const Denuncia = () => {
 
         setPersona(_persona);
     }
+
+    // Arma Input
+    const onInputChangeArma = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _arma = { ...arma};
+        _arma[`${name}`] = val;
+
+        setArma(_arma);
+    }
+
+    // Especie Input
+
+    const onInputChangeEspecie = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+      
+        let _especie = { ...especie};
+        
+        _especie[`${name}`] = val;
+       
+        setEspecie(_especie);
+    }
+    // Vehiculo Input
+    const onInputChangeVehiculo = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+      
+        let _vehiculo = { ...vehiculo};
+        
+        _vehiculo[`${name}`] = val;
+       
+        setVehiculo(_vehiculo);
+    }
+    // Estadoo
+    const onCheckboxChange = (e) => {
+        setCheckboxValue([]);
+        let selectedValue = [...checkboxValue];
+        if (e.checked)
+            selectedValue.push(e.value);
+        else
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+       
+        setCheckboxValue(selectedValue);
+        var state_arma='I';
+        console.log(selectedValue);
+        if (e.checked){
+            console.log("agagaggagaaga");
+            state_arma='A';
+        }
+       
+        
+        let _arma = { ...arma };
+        _arma["estado"] = state_arma ;
+        setArma(_arma);
+      
+    };
+
+    // Estadoo Especie
+    const onCheckboxChangeEspecie = (e) => {
+        setCheckboxValue([]);
+        let selectedValue = [...checkboxValue];
+        if (e.checked)
+            selectedValue.push(e.value);
+        else
+            selectedValue.splice(selectedValue.indexOf(e.value), 1);
+       
+        setCheckboxValue(selectedValue);
+        var state_especie='I';
+        console.log(selectedValue);
+        if (e.checked){
+            console.log("agagaggagaaga");
+            state_especie='A';
+        }
+       
+        
+        let _especie = { ...especie };
+        _especie["estado"] = state_especie ;
+        setEspecie(_especie);
+      
+    };
+    const onCheckboxChangeVehiculo = (e) => {
+        setCheckboxValue([]);
+            let selectedValue = [...checkboxValue];
+            if (e.checked)
+                selectedValue.push(e.value);
+            else
+                selectedValue.splice(selectedValue.indexOf(e.value), 1);
+           
+            setCheckboxValue(selectedValue);
+            var state_vehiculo='I';
+            console.log(selectedValue);
+            if (e.checked){
+                console.log("agagaggagaaga");
+                state_vehiculo='A';
+            }
+           
+            
+            let _vehiculo = { ...vehiculo};
+            _vehiculo["estado"] = state_vehiculo ;
+            setVehiculo(_vehiculo);
+      
+    };
 
     
     const leftToolbarTemplate = () => {
@@ -569,7 +952,72 @@ const Denuncia = () => {
         }
       };
 
+    //   Armas
+    const   handleKeyUpArma = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedArma!=null && selectedArma.idarma){
+                let key='idpersona';
+                let campo_unico=validarCampoUnico(selectedArma.idarma,armas,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la persona', life: 3000 });
+                }else{
+                    let _armas = [...armas];
+                    let _selectedArma = { ...selectedArma };
+                    _armas.push(_selectedArma);
+                    setArmas(_armas);
+                    setselectedArma(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una persona', life: 3000 });
+            }
+            
+        }
+      };
 
+      //   Especie
+    const   handleKeyUpEspecie = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedEspecie!=null && selectedEspecie.idespecie){
+                let key='idespecie';
+                let campo_unico=validarCampoUnico(selectedEspecie.idespecie,especies,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la especie', life: 3000 });
+                }else{
+                    let _especies = [...especies];
+                    let _selectedEspecie = { ...selectedEspecie };
+                    _especies.push(_selectedEspecie);
+                    setEspecies(_especies);
+                    setselectedEspecie(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una especie', life: 3000 });
+            }
+            
+        }
+      };
+
+    //   Vehiculo
+    
+    const   handleKeyUpVehiculo = (e) => {
+        if (e.key === 'Enter') {
+            if(selectedVehiculo!=null && selectedVehiculo.idvehiculo){
+                let key='idvehiculo';
+                let campo_unico=validarCampoUnico(selectedVehiculo.idvehiculo,vehiculos,key)
+                if(campo_unico==true){
+                    toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Ya se agregó la especie', life: 3000 });
+                }else{
+                    let _vehiculos = [...vehiculos];
+                    let _selectedVehiculo = { ...selectedVehiculo };
+                    _vehiculos.push(_selectedVehiculo);
+                    setVehiculos(_vehiculos);
+                    setselectedVehiculo(null);
+                }
+            }else{
+                toast.current.show({ severity: 'warn', summary: 'informa', detail: 'Escoger una especie', life: 3000 });
+            }
+            
+        }
+      };
 
     const descripcionBodyTemplate = (rowData) => {
         return (
@@ -618,6 +1066,27 @@ const Denuncia = () => {
             </div>
         );
     }
+    const actionBodyArma = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteArma(rowData)} />
+            </div>
+        );
+    }
+    const actionBodyEspecie = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteEspecie(rowData)} />
+            </div>
+        );
+    }
+    const actionBodyVehiculo = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteVehiculo(rowData)} />
+            </div>
+        );
+    }
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -647,6 +1116,24 @@ const Denuncia = () => {
         <>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteAgraviadoDialog} />
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteAgraviado} />
+        </>
+    );
+    const deleteArmaDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteArmaDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteArma} />
+        </>
+    );
+    const deleteEspecieDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteEspecieDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteEspecie} />
+        </>
+    );
+    const deleteVehiculoDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteVehiculoDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteVehiculo} />
         </>
     );
  
@@ -815,35 +1302,71 @@ const Denuncia = () => {
                                 <Column body={actionBodyAgraviado}></Column>
                             </DataTable>
                             </div>
-                        </div>
+                    </div>
                     <div className="formgrid grid">
                             <div className="field col-4">
-                                <label htmlFor="address">Arma</label>
+                                <label htmlFor="arma">Arma</label>
                                 <div className="p-inputgroup">
                                     <span className="p-float-label">
-                                    <AutoComplete  placeholder="Buscar Arma" id="dd"   value={selectedArma} onChange={(e) => setselectedArma(e.value)} suggestions={autoFilteredArma} completeMethod={searchArma} field="full_name" />
+                                    <AutoComplete   onKeyUp={handleKeyUpArma} placeholder="Buscar Arma" id="dd"   value={selectedArma} onChange={onArmaChange} suggestions={autoFilteredArma} completeMethod={searchArma} field="full_name" />
                                     </span>
-                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                    <Button  onClick={openNewArma} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                                 </div>
                             </div>
                             <div className="field col-4">
                                 <label htmlFor="address">Especie</label>
                                 <div className="p-inputgroup">
                                     <span className="p-float-label">
-                                    <AutoComplete  placeholder="Buscar Especie" id="dd"   value={selectedEspecie} onChange={(e) => setselectedEspecie(e.value)} suggestions={autoFilteredEspecie} completeMethod={searchEspecie} field="full_name" />
+                                    <AutoComplete onKeyUp={handleKeyUpEspecie} placeholder="Buscar Especie" id="dd"   value={selectedEspecie} onChange={onEspecieChange} suggestions={autoFilteredEspecie} completeMethod={searchEspecie} field="full_name" />
                                     </span>
-                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                    <Button onClick={openNewEspecie} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                                 </div>
                             </div>
                             <div className="field col-4">
                                 <label htmlFor="address">Vehiculo</label>
                                 <div className="p-inputgroup">
                                     <span className="p-float-label">
-                                    <AutoComplete  placeholder="Buscar Vehículo" id="dd"   value={selectedVehiculo} onChange={(e) => setselectedVehiculo(e.value)} suggestions={autoFilteredVehiculo} completeMethod={searchVehiculo} field="full_name" />
+                                    <AutoComplete onKeyUp={handleKeyUpVehiculo} placeholder="Buscar Vehículo" id="dd"   value={selectedVehiculo} onChange={onVehiculoChange} suggestions={autoFilteredVehiculo} completeMethod={searchVehiculo} field="full_name" />
                                     </span>
-                                    <Button type="button" icon="pi pi-plus" className="p-button-secondary"  />
+                                    <Button  onClick={openNewVehiculo} type="button" icon="pi pi-plus" className="p-button-secondary"  />
                                 </div>
                             </div>
+                    </div>
+                    <div className="formgrid grid">
+                        <div className="field col-4">
+                            <DataTable value={armas} 
+                                dataKey="idArma"  className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="Armas vacio."  responsiveLayout="scroll">
+                                <Column field="full_name" header="Armas" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
+                                <Column body={actionBodyArma}></Column>
+                            </DataTable>
+                        </div>
+                        <div className="field col-4">
+                            <DataTable ref={dt} value={especies}
+                                dataKey="idEspecie" className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="Especies vacio."  responsiveLayout="scroll">
+                                
+                                <Column field="full_name" header="Especies" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
+                               
+                                <Column body={actionBodyEspecie}></Column>
+                            </DataTable>
+                        </div>
+                        <div className="field col-4">
+                            <DataTable ref={dt} value={vehiculos}
+                                dataKey="idVehiculo" className="datatable-responsive"
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                currentPageReportTemplate="Mostrando  {first} a {last} de {totalRecords} perfiles"
+                                globalFilter={globalFilter} emptyMessage="Vehiculos vacio."  responsiveLayout="scroll">
+                                
+                                <Column field="full_name" header="Vehiculos" headerStyle={{ width: '80%', minWidth: '10rem' }}></Column>
+                               
+                                <Column body={actionBodyVehiculo}></Column>
+                            </DataTable>
+                        </div>
                     </div>
                     </Dialog>
                     {/* Persona Modal */}
@@ -904,6 +1427,122 @@ const Denuncia = () => {
                         </div>
                     </Dialog>
 
+                     {/* Modal Arma */}
+                    <Dialog visible={armaDialog} style={{ width: '450px' }} header={titleArma} modal className="p-fluid" footer={armaDialogFooter} onHide={hideDialog}>
+                        
+                        <div className="field">
+                            <label htmlFor="marca">Marca</label>
+                            <InputText id="marca" value={arma.marca} onChange={(e) => onInputChangeArma(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.marca })} />
+                            {submitted && !arma.marca && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="modelo">Modelo</label>
+                            <InputText id="modelo" value={arma.modelo} onChange={(e) => onInputChangeArma(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.modelo })} />
+                            {submitted && !arma.modelo && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="calibre">Calibre</label>
+                            <InputText id="calibre" value={arma.calibre} onChange={(e) => onInputChangeArma(e, 'calibre')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.calibre })} />
+                            {submitted && !arma.calibre && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="serie">Serie</label>
+                            <InputText id="serie" value={arma.serie} onChange={(e) => onInputChangeArma(e, 'serie')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.serie })} />
+                            {submitted && !arma.serie && <small className="p-invalid">Serie es requerido.</small>}
+                        </div>
+                        <label htmlFor="estado">Estado</label>
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                           </div>
+                            {submitted && !arma.estado && <small className="p-invalid">Estado es requerido.</small>}
+                        </div>
+                    </Dialog>
+
+                    {/* Modal especie */}
+
+                    <Dialog visible={especieDialog} style={{ width: '450px' }} header={titleEspecie} modal className="p-fluid" footer={especieDialogFooter} onHide={hideDialog}>
+                        <div className="field">
+                            <label htmlFor="especie">Especies</label>
+                            <InputText id="especie" value={especie.especie} onChange={(e) => onInputChangeEspecie(e, 'especie')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.especie })} />
+                            {submitted && !especie.especie && <small className="p-invalid">Especie es requerido.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="documento">Tipo de documento</label>
+                            <InputText id="documento" value={especie.documento} onChange={(e) => onInputChangeEspecie(e, 'documento')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.documento})} />
+                            {submitted && !especie.documento && <small className="p-invalid">Tipo de documento es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="codigoDoc">Codigo documento</label>
+                            <InputText id="codigoDoc" value={especie.codigoDoc} onChange={(e) => onInputChangeEspecie(e, 'codigoDoc')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.codigoDoc})} />
+                            {submitted && !especie.codigoDoc && <small className="p-invalid">Codigo Documento es requerido.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="situacion">Situación</label>
+                            <InputText id="situacion" value={especie.situacion} onChange={(e) => onInputChangeEspecie(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !especie.situacion})} />
+                            {submitted && !especie.situacion && <small className="p-invalid">Especie es requerido.</small>}
+                        </div>
+
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChangeEspecie} />  
+                           </div>
+                            {submitted && !especie.estado && <small className="p-invalid">Estado es requerido.</small>}
+                        </div>
+                    </Dialog>
+
+                    {/* Vehiculo Modal */}
+
+                    <Dialog visible={vehiculoDialog} style={{ width: '450px' }} header={titleVehiculo} modal className="p-fluid" footer={vehiculoDialogFooter} onHide={hideDialog}>
+                        
+                        <div className="field">
+                                <label htmlFor="clase">Clase Vehiculo</label>
+                                <InputText id="clase" value={vehiculo.clase} onChange={(e) => onInputChangeVehiculo(e, 'clase')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.clase })} />
+                                {submitted && !vehiculo.clase && <small className="p-invalid">vehiculo es requerido.</small>}
+                            </div>
+                            <div className="field">
+                                <label htmlFor="marca">Marca</label>
+                                <InputText id="marca" value={vehiculo.marca} onChange={(e) => onInputChangeVehiculo(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.marca })} />
+                                {submitted && !vehiculo.marca && <small className="p-invalid">marca es requerido.</small>}
+                            </div>
+                            <div className="field">
+                                <label htmlFor="modelo">Modelo</label>
+                                <InputText id="modelo" value={vehiculo.modelo} onChange={(e) => onInputChangeVehiculo(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.modelo })} />
+                                {submitted && !vehiculo.modelo && <small className="p-invalid">Modelo es requerido.</small>}
+                            </div>
+                            <div className="field">
+                                <label htmlFor="placa">Placa</label>
+                                <InputText id="placa" value={vehiculo.placa} onChange={(e) => onInputChangeVehiculo(e, 'placa')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.placa })} />
+                                {submitted && !vehiculo.placa && <small className="p-invalid">Placa es requerido.</small>}
+                            </div>
+                            <div className="field">
+                                <label htmlFor="situacion">Situación</label>
+                                <InputText id="situacion" value={vehiculo.situacion} onChange={(e) => onInputChangeVehiculo(e, 'situacion')} required autoFocus className={classNames({ 'p-invalid': submitted && !vehiculo.situacion })} />
+                                {submitted && !vehiculo.situacion && <small className="p-invalid">vehiculo es requerido.</small>}
+                            </div>
+                            <div className="col-12 md:col-4">
+                                <div className="field-checkbox">
+                               
+                                <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChangeVehiculo} />  
+                               </div>
+                               {submitted && !vehiculo.estado && <small className="p-invalid">Estado es requerido.</small>}
+                            </div>
+                        </Dialog>
+    
+                       
+    
+                        <Dialog visible={deleteVehiculoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteVehiculoDialogFooter} onHide={hideDeleteVehiculoDialog}>
+                            <div className="flex align-items-center justify-content-center">
+                                <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                                {vehiculo && <span>¿Estás seguro de que quieres eliminar el vehiculo<b>{vehiculo.clase}</b>?</span>}
+                            </div>
+                        </Dialog>
+    
                     <Dialog visible={deleteDenuncianteDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteDenuncianteDialogFooter} onHide={hideDeleteDenuncianteDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
@@ -922,8 +1561,24 @@ const Denuncia = () => {
                              <span>¿Estás seguro de que quieres eliminar al Agraviado?</span>
                         </div>
                     </Dialog>
-
-                   
+                    <Dialog visible={deleteArmaDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteArmaDialogFooter} onHide={hideDeleteArmaDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>¿Estás seguro de que quieres eliminar al Arma?</span>
+                        </div>
+                    </Dialog>
+                    <Dialog visible={deleteEspecieDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteEspecieDialogFooter} onHide={hideDeleteEspecieDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>¿Estás seguro de que quieres eliminar la especie?</span>
+                        </div>
+                    </Dialog>
+                    <Dialog visible={deleteVehiculoDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteVehiculoDialogFooter} onHide={hideDeleteVehiculoDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                             <span>¿Estás seguro de que quieres eliminar el vehiculo?</span>
+                        </div>
+                    </Dialog>
                 </div>
             </div>
         </div>
