@@ -55,7 +55,7 @@ class PersonaController extends Controller
         $data_person = [];
         foreach ($query_person as $item) { 
             $data_person[] = [
-                'idpersona'=>$item->idpersona,
+                'idpersona'=>$item->idpersona, 
                 'full_name' =>$item->dni.' '.$item->nombre.' '.$item->ap_paterno.' '.$item->ap_materno,
             ];
         }
