@@ -60,6 +60,7 @@ import Seccion from '../pages/Seccion';
 import EmptyPage from '../pages/EmptyPage';
 import TimelineDemo from '../pages/TimelineDemo';
 
+
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
 
@@ -517,7 +518,7 @@ const Home = () => {
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/Denuncia" component={Denuncia} />
-                    <Route path="/Dashboard" component={Crud} />
+                    <Route path="/Dashboard" component={ChartDemo} />
                     <Route path="/Libro" component={Libro} />
                     <Route path="/Seccion" component={Seccion} />
                 </div>

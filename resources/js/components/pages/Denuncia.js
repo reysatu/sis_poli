@@ -29,6 +29,8 @@ import  LibroService from "../service/LibroService";
 import  ModalityService from "../service/ModalityService";
 import { Dropdown } from 'primereact/dropdown';
 
+import Maps from '../components/Maps';
+
 const Denuncia = () => {
     let list_modalities;
     let emptyPerfil = {
@@ -212,7 +214,9 @@ const Denuncia = () => {
     const [personas, setPersonas] = useState(null);
     const [personaDialog, setPersonaDialog] = useState(false);
     const [titlePersona,setTitlePersona]=useState('');
-
+    // MAP 
+    const [mapDialog, setMapDialog] = useState(false);
+    const [titleMap,setTitleMap]=useState('');
     //modalidad
     useEffect(() => {
         async function fetchDataModality() {
@@ -507,6 +511,7 @@ const Denuncia = () => {
     };
 
     const hideDialog = () => {
+        setMapDialog(false);
         setSubmitted(false);
         setPersonaDialog(false);
         setArmaDialog(false);
@@ -589,6 +594,13 @@ const Denuncia = () => {
         setPersonaDialog(true);
         setTitlePersona('Nueva Persona');
     }
+    // Modal
+    const openMap = () => {
+        
+        setMapDialog(true);
+        setTitleMap('Mapa');
+    }
+    
 
     // Nuevo Arma
     const openNewArma = () => {
@@ -630,6 +642,12 @@ const Denuncia = () => {
     );
 
     const personaDialogFooter = (
+        <>
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={savePersona} />
+        </>
+    );
+    const mapDialogFooter = (
         <>
             <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={savePersona} />
@@ -1214,7 +1232,7 @@ const Denuncia = () => {
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">&nbsp;</label>
-                                <Button label="mapa" icon="pi pi-search" className="p-button-info mr-2 mb-2" />
+                                <Button label="mapa" onClick={openMap} icon="pi pi-search" className="p-button-info mr-2 mb-2" />
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">Latitud Hecho</label>
@@ -1369,29 +1387,14 @@ const Denuncia = () => {
                         </div>
                     </div>
                     </Dialog>
-                    {/* Persona Modal */}
-                    <Dialog visible={personaDialog} style={{ width: '450px' }} header={titlePersona} modal className="p-fluid" footer={personaDialogFooter} onHide={hideDialog}>
+                    {/* Modal Map */}
+                    <Dialog visible={mapDialog} style={{ width: '700px' }} header={titleMap} modal className="p-fluid" footer={mapDialogFooter} onHide={hideDialog}>
 
-                        <div className="field">
-                            <label htmlFor="dni">DNI</label>
-                            <InputText id="dni" value={persona.dni} onChange={(e) => onInputChangePerson(e, 'dni')} required  className={classNames({ 'p-invalid': submitted && !persona.dni })} />
-                            {submitted && !persona.dni && <small className="p-invalid">Dni es requerido.</small>}
+                        <div  id ="map" >
+                            <Maps/>
                         </div>
-                        <div className="field">
-                            <label htmlFor="nombre">Nombre</label>
-                            <InputText id="nombre" value={persona.nombre} onChange={(e) => onInputChangePerson(e, 'nombre')} required  className={classNames({ 'p-invalid': submitted && !persona.nombre })}/>
-                            {submitted && !persona.nombre && <small className="p-invalid">Nombre es requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="ap_paterno">AP. Paterno</label>
-                            <InputText id="ap_paterno" value={persona.ap_paterno} onChange={(e) => onInputChangePerson(e, 'ap_paterno')} required  className={classNames({ 'p-invalid': submitted && !persona.ap_paterno })}/>
-                            {submitted && !persona.ap_paterno && <small className="p-invalid">Apellido Paterno es requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="ap_materno">AP. Materno</label>
-                            <InputText id="ap_materno" value={persona.ap_materno} onChange={(e) => onInputChangePerson(e, 'ap_materno')} required  className={classNames({ 'p-invalid': submitted && !persona.ap_materno })}/>
-                            {submitted && !persona.ap_materno && <small className="p-invalid">Usuario es requerido.</small>}
-                        </div>
+                        
+                        
                         {/* <div className="field">
                             <label htmlFor="nacimiento">Fech.Nacimiento</label>
                            
@@ -1400,33 +1403,42 @@ const Denuncia = () => {
                             </div>
                             {submitted && !persona.nacimiento && <small className="p-invalid">Usuario es requerido.</small>}
                         </div> */}
+                        
+                    </Dialog>
+                     {/* Modal Arma */}
+                     <Dialog visible={armaDialog} style={{ width: '450px' }} header={titleArma} modal className="p-fluid" footer={armaDialogFooter} onHide={hideDialog}>
+                        
                         <div className="field">
-                            <label htmlFor="edad">Edad</label>
-                            <InputText id="edad" value={persona.edad} onChange={(e) => onInputChangePerson(e, 'edad')} required  className={classNames({ 'p-invalid': submitted && !persona.edad })}/>
-                            {submitted && !persona.edad && <small className="p-invalid">edad es requerido.</small>}
+                            <label htmlFor="marca">Marca</label>
+                            <InputText id="marca" value={arma.marca} onChange={(e) => onInputChangeArma(e, 'marca')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.marca })} />
+                            {submitted && !arma.marca && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="modelo">Modelo</label>
+                            <InputText id="modelo" value={arma.modelo} onChange={(e) => onInputChangeArma(e, 'modelo')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.modelo })} />
+                            {submitted && !arma.modelo && <small className="p-invalid">Arma es requerido.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="calibre">Calibre</label>
+                            <InputText id="calibre" value={arma.calibre} onChange={(e) => onInputChangeArma(e, 'calibre')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.calibre })} />
+                            {submitted && !arma.calibre && <small className="p-invalid">Arma es requerido.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="sexo">Sexo</label>
-                            <InputText id="sexo" value={persona.sexo} onChange={(e) => onInputChangePerson(e, 'sexo')} required  className={classNames({ 'p-invalid': submitted && !persona.sexo })}/>
-                            {submitted && !persona.sexo && <small className="p-invalid">sexo es requerido.</small>}
+                            <label htmlFor="serie">Serie</label>
+                            <InputText id="serie" value={arma.serie} onChange={(e) => onInputChangeArma(e, 'serie')} required autoFocus className={classNames({ 'p-invalid': submitted && !arma.serie })} />
+                            {submitted && !arma.serie && <small className="p-invalid">Serie es requerido.</small>}
                         </div>
-                        <div className="field">
-                            <label htmlFor="celular">Celular</label>
-                            <InputText id="celular" value={persona.celular} onChange={(e) => onInputChangePerson(e, 'celular')} required  className={classNames({ 'p-invalid': submitted && !persona.celular })}/>
-                            {submitted && !persona.celular && <small className="p-invalid">celular es requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="estado_civil">Estado Civil</label>
-                            <InputText id="estado_civil" value={persona.estado_civil} onChange={(e) => onInputChangePerson(e, 'estado_civil')} required  className={classNames({ 'p-invalid': submitted && !persona.sexo })}/>
-                            {submitted && !persona.estado_civil && <small className="p-invalid">estado_civil es requerido.</small>}
-                        </div>
-                        <div className="field">
-                            <label htmlFor="situacion">Situacion</label>
-                            <InputText id="situacion" value={persona.situacion} onChange={(e) => onInputChangePerson(e, 'situacion')} required  className={classNames({ 'p-invalid': submitted && !persona.situacion })}/>
-                            {submitted && !persona.situacion && <small className="p-invalid">situacion es requerido.</small>}
+                        <label htmlFor="estado">Estado</label>
+                        <div className="col-12 md:col-4">
+                            <div className="field-checkbox">
+                           
+                            <Checkbox inputId="checkOption1" name="estado" value='A' checked={checkboxValue.indexOf('A') !== -1} onChange={onCheckboxChange} />  
+                           </div>
+                            {submitted && !arma.estado && <small className="p-invalid">Estado es requerido.</small>}
                         </div>
                     </Dialog>
-
                      {/* Modal Arma */}
                     <Dialog visible={armaDialog} style={{ width: '450px' }} header={titleArma} modal className="p-fluid" footer={armaDialogFooter} onHide={hideDialog}>
                         
