@@ -28,9 +28,10 @@ import  SeccionService from "../service/SeccionService";
 import  LibroService from "../service/LibroService";
 import  ModalityService from "../service/ModalityService";
 import { Dropdown } from 'primereact/dropdown';
-
+import { geocodeByAddress,geocodeByPlaceId,getLatLng } from 'react-places-autocomplete';
+import PlacesAutocomplete from 'react-places-autocomplete';
 import Maps from '../components/Maps';
-
+import AutoCompleteMap from '../components/AutoCompleteMap';
 const Denuncia = () => {
     let list_modalities;
     let emptyPerfil = {
@@ -1227,8 +1228,7 @@ const Denuncia = () => {
                     <div className="formgrid grid">
                             <div className="field col-5">
                                 <label htmlFor="descripcion">Dirección Hecho</label>
-                                <InputText id="descripcion" value={perfil.descripcion} onChange={(e) => onInputChange(e, 'descripcion')} required  className={classNames({ 'p-invalid': submitted && !perfil.descripcion })} />
-                                {submitted && !perfil.descripcion && <small className="p-invalid">Perfil es requerido.</small>}
+                                <AutoCompleteMap/>
                             </div>
                             <div className="field col-2 ">
                                 <label htmlFor="descripcion">&nbsp;</label>

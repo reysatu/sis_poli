@@ -32,6 +32,7 @@
     <div id="root">
 
     </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwq9jkLCmf8oHecoIGu0Hp7l1OC9uoUfM&libraries=places"></script>
 </body>
 
 </html>
