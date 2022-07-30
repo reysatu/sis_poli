@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { geocodeByAddress,geocodeByPlaceId,getLatLng } from 'react-places-autocomplete';
 import PlacesAutocomplete from 'react-places-autocomplete';
-
+import { InputText } from 'primereact/inputtext';
 function AutoCompleteMap () {
     const [address, setAdress] = useState("")
     const [coordinates, setCoordinates] = useState({
@@ -31,7 +31,7 @@ function AutoCompleteMap () {
                         key={suggestions.description}
 
                     >
-                        <input
+                        <InputText
                             {...getInputProps({
                                 placeholder: 'Buscar Ubicacion ...',
                                 className: 'location-search-input',
